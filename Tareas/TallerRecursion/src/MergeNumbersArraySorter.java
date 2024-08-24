@@ -23,10 +23,13 @@ public class MergeNumbersArraySorter implements NumbersArraySorter {
 	 * @param index where we finish the sorting process
 	 */
 	public void merge(List<Integer> numbers, int s, int f) {
+		//Apply case base
 		if(s==f) return;
 		int mid = (s+f)/2;
+		//Apply recursive vision for each subarray
 		merge(numbers,s,mid);
 		merge(numbers,mid+1,f);
+		//Join both solution subproblems
 		mergesorted(numbers,s,f,mid);
 	}
 	/**
@@ -44,7 +47,9 @@ public class MergeNumbersArraySorter implements NumbersArraySorter {
 		int lasti = mid;
 		int lastj = f;
 		
-		ArrayList<Integer> sorted = new ArrayList<Integer>(); 
+		ArrayList<Integer> sorted = new ArrayList<Integer>();
+
+		//Merge elements of the two subarrays
 		
 		while(i<=lasti && j<=lastj) {
 			if (numbers.get(i) <= numbers.get(j)){

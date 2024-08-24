@@ -62,9 +62,10 @@ public class RecursiveIntegerLinkedList {
 	 * @return int Size of the list
 	 */
 	public int size () {
-		// TODO: Implementar con un algoritmo recursivo
+		//Check base case
 		if(empty) return 0;
 		if(next==null) return 1;
+		//Apply recursive call
 		return 1+next.size();
 	}
 	
@@ -74,8 +75,9 @@ public class RecursiveIntegerLinkedList {
 	 * @return int position of the list where the value is located
 	 */
 	public int indexOf(int value) {
-		// TODO: Implementar con un algoritmo recursivo
+		//Check base case
 		if(empty) return -1;
+		//Apply recursive call
 		return firstAppearance(value,0);
 		
 	}
@@ -86,8 +88,10 @@ public class RecursiveIntegerLinkedList {
 	 * @return int position of the list where the value is located
 	 */
 	public int firstAppearance(int value, int index) {
+		//Check base cases
 		if (value==number) return index;
 		if (next==null) return -1; 
+		//Apply recursive call
 		return next.firstAppearance(value,index+1);
 	}
 	
@@ -97,12 +101,14 @@ public class RecursiveIntegerLinkedList {
 	 * @return int position of the list whare the value is located
 	 */
 	public int lastIndexOf(int value) {
-		// TODO: Implementar con un algoritmo recursivo
+		//Check base case
 		if(empty) return -1;
+		//Apply recursive call
 		return lastAppearance(value,0);
 	}
 	
 	public int lastAppearance(int value, int index) {
+		//Apply recursive call and recursive call using ternary operator
 		int forward_check = (next==null)? -1: next.lastAppearance(value,index+1);
 		if (value==number) return (index > forward_check) ? index : forward_check;
 		return forward_check;
@@ -113,9 +119,10 @@ public class RecursiveIntegerLinkedList {
 	 * @return int Maximum value
 	 */
 	public int max () {
-		// TODO: Implementar con un algoritmo recursivo
+		//Check base cases
 		if(empty) return Integer.MIN_VALUE;
 		if(next==null) return number;
+		//Apply recursive call
 		int nm = next.max();
 		return (nm > number) ? nm : number;
 	}
@@ -125,9 +132,10 @@ public class RecursiveIntegerLinkedList {
 	 * @return int Number of values that are even
 	 */
 	public int countEven () {
-		// TODO: Implementar con un algoritmo recursivo
+		//Check base cases
 		int value = (number%2 == 0 && !empty) ? 1 : 0;
 		if(next==null) return value;
+		//Apply recursive call
 		return value + next.countEven();
 	}
 	
@@ -136,7 +144,9 @@ public class RecursiveIntegerLinkedList {
 	 * @return boolean if the list is sorted by value. False otherwise
 	 */
 	public boolean isSorted () {
+		//Check base case
 		if(empty || next==null) return true;
+		//Apply recursive call
 		return number <= next.get(0) && next.isSorted();
 	}
 }

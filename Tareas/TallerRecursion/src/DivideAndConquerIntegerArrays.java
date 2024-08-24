@@ -18,7 +18,7 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int Maximum value in the list
 	 */
 	public int max() {
-		//TODO: implementar en una linea utilizando el siguiente metodo
+		//Check if there are elements to compare
 		return (numbers.size()==0) ? Integer.MIN_VALUE : max(0,numbers.size()-1);
 	}
 	
@@ -29,7 +29,6 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int maximum value within the given limits
 	 */
 	private int max (int first, int last) {
-		//TODO: Implementar utilizando la tecnica de dividir y conquistar
 		//Check base case
 		if (last == first) return numbers.get(last);
 		//Divide into two subproblems
@@ -45,7 +44,7 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int position where the given value is located
 	 */
 	public int searchUnsorted (int value) {
-		//TODO: implementar en una linea utilizando el siguiente metodo
+		//Apply the search for all the elements
 		return searchUnsorted(value,0,numbers.size()-1);
 	}
 	/**
@@ -56,7 +55,6 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int position between first and last where the given value is located
 	 */
 	private int searchUnsorted (int value, int first, int last) {
-		//TODO: Implementar utilizando la tecnica de dividir y conquistar
 		//Check case base
 		if (last < first) return -1;
 		//Divide into two subproblems
@@ -74,7 +72,7 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int position where the given value is located
 	 */
 	public int searchSorted (int value) {
-		//TODO: implementar en una linea utilizando el siguiente metodo
+		//Apply the search for all the elements
 		return searchSorted(value,0,numbers.size()-1);
 	}
 	/**
@@ -86,7 +84,6 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int position between first and last where the given value is located
 	 */
 	private int searchSorted (int value, int first, int last) {
-		//TODO: Implementar busqueda binaria
 		//Check case base
 		if(last < first) return -1;
 		//Split into two subproblems
@@ -103,7 +100,7 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int Number of values that are even
 	 */
 	public int countEven() {
-		//TODO: implementar en una linea utilizando el siguiente metodo
+		//Apply the count for all the elements
 		return countEven(0,numbers.size()-1);
 	}
 	
@@ -114,7 +111,6 @@ public class DivideAndConquerIntegerArrays {
 	 * @return int count of even values within the given limits
 	 */
 	private int countEven (int first, int last) {
-		//TODO: Implementar utilizando la tecnica de dividir y conquistar
 		//Check case base
 		if(last < first) return 0;
 		//Split into two subproblems
