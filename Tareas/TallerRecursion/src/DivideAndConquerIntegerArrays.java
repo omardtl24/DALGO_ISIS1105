@@ -19,7 +19,7 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	public int max() {
 		//TODO: implementar en una linea utilizando el siguiente metodo
-		return Integer.MIN_VALUE;
+		return (numbers.size()==0) ? Integer.MIN_VALUE : max(0,numbers.size()-1);
 	}
 	
 	/**
@@ -30,7 +30,14 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	private int max (int first, int last) {
 		//TODO: Implementar utilizando la tecnica de dividir y conquistar
-		return Integer.MIN_VALUE;
+		//Check base case
+		if (last == first) return numbers.get(last);
+		//Divide into two subproblems
+		int mid = (first+last)/2;
+		int firsthalf = max(first,mid);
+		int secondhalf = max(mid+1,last);
+		//Join solutions by comparing and choosing largest
+		return (firsthalf > secondhalf)? firsthalf : secondhalf;
 	}
 	/**
 	 * Finds a position in this numbers where the given value is located
@@ -39,7 +46,7 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	public int searchUnsorted (int value) {
 		//TODO: implementar en una linea utilizando el siguiente metodo
-		return -1;
+		return searchUnsorted(value,0,numbers.size()-1);
 	}
 	/**
 	 * Finds a position in this numbers between the given limits where the given value is located
@@ -50,7 +57,15 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	private int searchUnsorted (int value, int first, int last) {
 		//TODO: Implementar utilizando la tecnica de dividir y conquistar
-		return -1;
+		//Check case base
+		if (last < first) return -1;
+		//Divide into two subproblems
+		int mid = (first+last)/2;
+		if (value==numbers.get(mid)) return mid;
+		int firsthalf = searchUnsorted(value,first,mid-1);
+		int secondhalf = searchUnsorted(value,mid+1,last);
+		//Join solutions by checking if any of it found the requested value
+		return (firsthalf != -1)? firsthalf : secondhalf;
 	}
 	/**
 	 * Finds a position in this numbers where the given value is located
@@ -60,7 +75,7 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	public int searchSorted (int value) {
 		//TODO: implementar en una linea utilizando el siguiente metodo
-		return -1;
+		return searchSorted(value,0,numbers.size()-1);
 	}
 	/**
 	 * Finds a position in this numbers between the given limits where the given value is located
@@ -72,7 +87,15 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	private int searchSorted (int value, int first, int last) {
 		//TODO: Implementar busqueda binaria
-		return -1;
+		//Check case base
+		if(last < first) return -1;
+		//Split into two subproblems
+		int mid = (first+last)/2;
+		if (value < numbers.get(mid)) return searchSorted(value,first,mid-1);
+		if (value > numbers.get(mid)) return searchSorted(value,mid+1,last);
+		//If value matches return the solution
+		return mid;
+		
 	}
 	
 	/**
@@ -81,7 +104,7 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	public int countEven() {
 		//TODO: implementar en una linea utilizando el siguiente metodo
-		return 0;
+		return countEven(0,numbers.size()-1);
 	}
 	
 	/**
@@ -92,6 +115,14 @@ public class DivideAndConquerIntegerArrays {
 	 */
 	private int countEven (int first, int last) {
 		//TODO: Implementar utilizando la tecnica de dividir y conquistar
-		return 0;
+		//Check case base
+		if(last < first) return 0;
+		//Split into two subproblems
+		int mid = (first+last)/2;
+		int value = (numbers.get(mid)%2==0) ? 1: 0;
+		int firsthalf = countEven (first, mid-1);
+		int secondhalf = countEven (mid+1, last);
+		//Join the two solutions
+		return firsthalf+secondhalf+value;		
 	}
 }
