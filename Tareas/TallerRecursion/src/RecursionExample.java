@@ -100,7 +100,7 @@ public class RecursionExample {
 				out.println(numbers.get(i));
 			}
 		}
-		
+		System.out.println("Sorting algorithm: "+algorithm);
 		System.out.println("Numbers sorted. Total time(milliseconds): "+(endTime-startTime));
 		
 		posDC = divideConquer.searchSorted(value);
