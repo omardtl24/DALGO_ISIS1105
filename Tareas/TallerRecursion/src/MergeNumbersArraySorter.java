@@ -63,6 +63,8 @@ public class MergeNumbersArraySorter implements NumbersArraySorter {
 		
 		for(;i<=lasti;i++) sorted.add(numbers.get(i));
 		for(;j<=lastj;j++) sorted.add(numbers.get(j));
+
+		//Write the sorted answer into the base List
 		
 		for(int k=0; k<size;k++) {
 			numbers.set(s+k, sorted.get(k));

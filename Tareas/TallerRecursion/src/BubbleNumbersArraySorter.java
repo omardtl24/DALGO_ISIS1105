@@ -16,6 +16,7 @@ public class BubbleNumbersArraySorter implements NumbersArraySorter {
 			for(int j=n; j>=i+1; j--) {
 				//Check if swapping is needed
 				if (numbers.get(j)<numbers.get(j-1)) {
+					//Swap adjacent elements
 					swap = numbers.get(j);
 					numbers.set(j,numbers.get(j-1));
 					numbers.set(j-1,swap);

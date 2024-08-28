@@ -11,10 +11,10 @@ public class RadixNumbersArraySorter implements NumbersArraySorter {
 	 */
 	@Override
 	public void sort(List<Integer> numbers) {
-		
+		//Get max value from the list
 		int maxval = Collections.max(numbers);
 		int exp = 1;
-
+		//Apply the sorting by each possible digit
 		while(maxval / exp > 0){
 			digitCountingSort(numbers, exp);
 			exp*=10;
@@ -27,7 +27,7 @@ public class RadixNumbersArraySorter implements NumbersArraySorter {
 		int[] sorted = new int[numbers.size()];
 		int index;
 		int value;
-		
+		//Apply the sorting process for the desired digit
 		for(int i=0; i < numbers.size(); i++) {
 			index = (numbers.get(i) / digit_exp) % 10;
 			count[index] ++;
@@ -43,7 +43,7 @@ public class RadixNumbersArraySorter implements NumbersArraySorter {
 			count[index] --;
 			sorted[count[index]] = value;
 		}
-		
+		//Write the sorted answer into the base List
 		for(int i=0; i < numbers.size(); i++) {
 			numbers.set(i, sorted[i]);
 		}

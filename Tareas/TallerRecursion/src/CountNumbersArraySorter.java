@@ -16,7 +16,8 @@ public class CountNumbersArraySorter implements NumbersArraySorter {
 		int[] count = new int[maxval+1];
 		int[] sorted = new int[numbers.size()];
 		int index;
-		
+
+		//Design the auxiliary array with the count of the elements to be sorted
 		for(int i=0; i < numbers.size(); i++) {
 			index = numbers.get(i);
 			count[index] ++;
@@ -26,12 +27,14 @@ public class CountNumbersArraySorter implements NumbersArraySorter {
 			count[i] += count[i-1];
 		}
 		
+		//Get the answer from auxiliary array
 		for(int i=numbers.size()-1; i >= 0 ; i--) {
 			index = numbers.get(i);
 			count[index] --;
 			sorted[count[index]] = index;
 		}
-		
+
+		//Write the sorted answer into the base List
 		for(int i=0; i < numbers.size(); i++) {
 			numbers.set(i, sorted[i]);
 		}
