@@ -29,7 +29,7 @@ public class RadixNumbersArraySorter implements NumbersArraySorter {
 		int value;
 		
 		for(int i=0; i < numbers.size(); i++) {
-			index = numbers.get(i) / digit_exp;
+			index = (numbers.get(i) / digit_exp) % 10;
 			count[index] ++;
 		}
 		
@@ -39,7 +39,7 @@ public class RadixNumbersArraySorter implements NumbersArraySorter {
 		
 		for(int i=numbers.size()-1; i >= 0 ; i--) {
 			value = numbers.get(i);
-			index = value/10;
+			index = (value/digit_exp)%10;
 			count[index] --;
 			sorted[count[index]] = value;
 		}
