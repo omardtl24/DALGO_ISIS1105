@@ -11,24 +11,10 @@ public class GreedyCoinChangeAlgorithm implements CoinChangeAlgorithm{
 	public int [] calculateOptimalChange(int totalValue, int [] denominations){
         int n = denominations.length;
         int [] answer = new int[n];
-        boolean feasible = true;
-        int max_index = 0;
-        //Apply the process while there is a feseable value and totalValue is not 0
-        while(feasible && totalValue>0){
-            //Look for a feasible max value
-            feasible = false;
-            for (int i=0; i<n; i++){
-                if(denominations[i]<=totalValue && denominations[i]>=denominations[max_index]){
-                    max_index = i;
-                    feasible = true;
-                }
-            }
-            //If feasible value was found, update the answer
-            if (feasible){
-                answer[max_index] = totalValue / max_index;
-                totalValue -= (denominations[max_index] * totalValue / max_index);
-            }
-            max_index = 0;
+        while(n>0){
+            answer[n-1] = totalValue / denominations[n-1];
+            totalValue =  totalValue % denominations[n-1];
+            n--;
         }
         return answer;
     }
