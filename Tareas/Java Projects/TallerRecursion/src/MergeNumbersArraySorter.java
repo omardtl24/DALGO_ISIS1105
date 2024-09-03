@@ -11,7 +11,6 @@ public class MergeNumbersArraySorter implements NumbersArraySorter {
 	 */
 	@Override
 	public void sort(List<Integer> numbers) {
-		// TODO Implement
 		int n = numbers.size()-1;
 		merge(numbers,0,n);
 
