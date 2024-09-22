@@ -1,24 +1,25 @@
-public class Resultado {
-    private int entero;
-    private int[][] matriz;
-
-    // Constructor
-    public Resultado(int entero, int[][] matriz) {
-        this.entero = entero;
-        this.matriz = matriz;
-    }
-
-    // Getters
-    public int getEntero() {
-        return entero;
-    }
-
-    public int[][] getMatriz() {
-        return matriz;
-    }
-}
-
 public class Problema1 {
+
+    public class Resultado {
+        private int entero;
+        private int[][] matriz;
+    
+        // Constructor
+        public Resultado(int entero, int[][] matriz) {
+            this.entero = entero;
+            this.matriz = matriz;
+        }
+    
+        // Getters
+        public int getEntero() {
+            return entero;
+        }
+    
+        public int[][] getMatriz() {
+            return matriz;
+        }
+    }
+    
 
     public int IndianaPath(int[][] A) {
         int R = A.length; 
@@ -42,9 +43,11 @@ public class Problema1 {
         }
         int row = R/2;
         int max = I[row][0];
+        int c = 0;
         for (int column = 1; column < C; column++){
             if (I[row][column] > max){
                 max = I[row][column];
+                c = column;
             }
         }
         return max;
@@ -72,9 +75,11 @@ public class Problema1 {
         }
         int row = R/2;
         int max = M[row][0];
+        int c = 0;
         for (int column = 1; column < C; column++){
             if (M[row][column] > max){
                 max = M[row][column];
+                c = column;
             }
         }
         return max;
@@ -102,9 +107,11 @@ public class Problema1 {
         }
         int row = R/2;
         int max = S[row][0];
+        int c = 0;
         for (int column = 1; column < C; column++){
             if (S[row][column] > max){
                 max = S[row][column];
+                c = column;
             }
         }
         return max;
