@@ -18,7 +18,6 @@ public class Resultado {
     }
 }
 
-
 public class Problema1 {
 
     public int IndianaPath(int[][] A) {
@@ -112,7 +111,7 @@ public class Problema1 {
     }
 
     public static void main(String[] args) {
-        implementacionIndiana indiana = new implementacionIndiana();
+        Problema1 problema1 = new Problema1();
 
         int[][] A = {
             {0, -1, -1, -1, 0},
@@ -122,9 +121,9 @@ public class Problema1 {
             {-1, -1, 0, -1, -1}
         };
 
-        int maxIndiana = indiana.IndianaPath(A);
-        int maxMarion = indiana.MarionPath(A);
-        int maxSalah = indiana.SalahPath(A);
+        int maxIndiana = problema1.IndianaPath(A);
+        int maxMarion = problema1.MarionPath(A);
+        int maxSalah = problema1.SalahPath(A);
 
         System.out.println("Max Indiana Path: " + maxIndiana);
         System.out.println("Max Marion Path: " + maxMarion);
