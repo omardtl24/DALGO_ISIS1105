@@ -81,7 +81,7 @@ public class implementacionIndiana {
             }
         }
         int row = R/2;
-        int max = M[row][0];
+        int max = S[row][0];
         for (int column = 1; column < C; column++){
             if (S[row][column] > max){
                 max = S[row][column];
@@ -90,5 +90,24 @@ public class implementacionIndiana {
         return max;
     }
 
+    public static void main(String[] args) {
+        implementacionIndiana indiana = new implementacionIndiana();
+
+        int[][] A = {
+            {0, -1, -1, -1, 0},
+            {2, 3, -1, 5, 4},
+            {-1, 5, 15, 2, 7},
+            {-1, 1, -1, 2, -1},
+            {-1, -1, 0, -1, -1}
+        };
+
+        int maxIndiana = indiana.IndianaPath(A);
+        int maxMarion = indiana.MarionPath(A);
+        int maxSalah = indiana.SalahPath(A);
+
+        System.out.println("Max Indiana Path: " + maxIndiana);
+        System.out.println("Max Marion Path: " + maxMarion);
+        System.out.println("Max Salah Path: " + maxSalah);
+    }
     
 }
