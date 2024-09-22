@@ -1,4 +1,25 @@
-public class implementacionIndiana {
+public class Resultado {
+    private int entero;
+    private int[][] matriz;
+
+    // Constructor
+    public Resultado(int entero, int[][] matriz) {
+        this.entero = entero;
+        this.matriz = matriz;
+    }
+
+    // Getters
+    public int getEntero() {
+        return entero;
+    }
+
+    public int[][] getMatriz() {
+        return matriz;
+    }
+}
+
+
+public class Problema1 {
 
     public int IndianaPath(int[][] A) {
         int R = A.length; 
