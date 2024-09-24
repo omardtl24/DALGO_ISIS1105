@@ -5,6 +5,8 @@ public class Particion {
 
     public Particion(int n){
         sets = new int[n];
+        for(int i=0;i < n;i++)
+            sets[i] = i;
         this.n = n;
     }
 
