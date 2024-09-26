@@ -845,4 +845,4 @@ def fullSolutionDP(A):
                                         ) + getSum(A,r,i,m,s,bi,bm,bs)
     
     r = get_max(P[R//2])
-    return r
+    return r , P
