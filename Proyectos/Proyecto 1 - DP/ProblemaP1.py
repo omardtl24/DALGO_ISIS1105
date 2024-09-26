@@ -130,8 +130,8 @@ def SalahPath(A):
     inf = int(1e6)
     for r in range(R-1,-1,-1):
         for i in range(C-1,-1,-1):
-            if r==R-1 and i==int(C/2): S[r][i] = 0
-            elif A[r][i]==-1 or (r==R-1 and i<C-1): S[r][i] = -inf
+            if r==R-1 and i==C//2: S[r][i] = 0
+            elif A[r][i]==-1 or (r==R-1 and i!=C//2): S[r][i] = -inf
             elif r<R-1 and i==0: S[r][i] = max(S[r+1][i],S[r+1][i+1]) + A[r][i]
             elif r<R-1 and i==C-1: S[r][i] = max(S[r+1][i],S[r+1][i-1]) + A[r][i]
             elif r<R-1 and 0<i<C-1: S[r][i] = max(S[r+1][i],S[r+1][i-1],S[r+1][i+1]) + A[r][i]
