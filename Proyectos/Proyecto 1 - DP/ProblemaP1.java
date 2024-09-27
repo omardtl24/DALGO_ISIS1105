@@ -129,7 +129,7 @@ public class ProblemaP1 {
         return new Resultado(max, A);
     }
 
-    public int SalahPath(int[][] A) {
+    public Resultado SalahPath(int[][] A) {
         int R = A.length; 
         int C = A[0].length;
         int[][] S = new int [R][C];
@@ -158,7 +158,29 @@ public class ProblemaP1 {
                 c = column;
             }
         }
-        return max;
+
+        if(max < 0) return new Resultado(inf,A);
+
+        ArrayList<int[]> moves = new ArrayList<int[]>();
+        int k;
+        while(row < R-1){
+            k = A[row][c];
+            A[row][c] = 0;
+
+            if(S[row][c] != S[row+1][c]+k){
+                moves.clear();
+                if(c > 0) moves.add(new int[]{row+1,c-1});
+                if(c < C-1) moves.add(new int[]{row+1,c+1});
+                for( int[] move: moves){
+                    if (S[move[0]][move[1]] + k == S[row][c]) {
+                        c = move[1];
+                        break;
+                    }
+                }
+            }
+            row++;
+        }
+        return new Resultado(max, A);
         
     }
 
@@ -175,7 +197,7 @@ public class ProblemaP1 {
 
         int maxIndiana = problema1.IndianaPath(A).getMaximo();
         int maxMarion = problema1.MarionPath(A).getMaximo();
-        int maxSalah = problema1.SalahPath(A);
+        int maxSalah = problema1.SalahPath(A).getMaximo();
 
         System.out.println("Max Indiana Path: " + maxIndiana);
         System.out.println("Max Marion Path: " + maxMarion);
