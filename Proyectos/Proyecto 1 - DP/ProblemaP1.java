@@ -21,8 +21,364 @@ public class ProblemaP1 {
             return matriz;
         }
     }
+
+    public static int[][] copyMatrix(int[][] original) {
+        int rows = original.length;
+        int cols = original[0].length;
+        
+        int[][] copy = new int[rows][cols];
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                copy[i][j] = original[i][j];
+            }
+        }
+        
+        return copy;
+    }
+
+    public int getPreviousMax(int[][][] P, int r, int i, int m) {
+        int maxTreasure = P[r-1][i][m];
+    
+        int dimI = P[0].length; 
+        int dimM = P[0][0].length;
+    
+        if (i > 0) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m]);
+        }
+    
+        if (i < dimI - 1) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m]);
+        }
+    
+        if (m > 0) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i][m-1]);
+        }
+    
+        if (m < dimM - 1) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i][m+1]);
+        }
+    
+        if (i > 0 && m > 0) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m-1]);
+        }
+
+        if (i > 0 && m < dimM - 1) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m+1]);
+        }
+    
+        if (i < dimI - 1 && m > 0) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m-1]);
+        }
+    
+        if (i < dimI - 1 && m < dimM - 1) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m+1]);
+        }
+    
+        return maxTreasure;
+    }
     
 
+    public int getPreviousMax(int[][][][] P, int r, int i, int m, int s) {
+        int maxTreasure = P[r-1][i][m][s];
+    
+        int dimI = P[0].length;
+        int dimM = P[0][0].length;
+        int dimS = P[0][0][0].length;
+    
+        if (s > 0) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i][m][s-1]);
+        }
+        if (s < dimS - 1) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i][m][s+1]);
+        }
+    
+        if (i > 0) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m][s]);
+            if (m > 0) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m-1][s]);
+                if (s > 0) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m-1][s-1]);
+                }
+                if (s < dimS - 1) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m-1][s+1]);
+                }
+            }
+            if (m < dimM - 1) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m+1][s]);
+                if (s > 0) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m+1][s-1]);
+                }
+                if (s < dimS - 1) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m+1][s+1]);
+                }
+            }
+            if (s > 0) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m][s-1]);
+            }
+            if (s < dimS - 1) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i-1][m][s+1]);
+            }
+        }
+    
+        if (i < dimI - 1) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m][s]);
+            if (m > 0) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m-1][s]);
+                if (s > 0) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m-1][s-1]);
+                }
+                if (s < dimS - 1) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m-1][s+1]);
+                }
+            }
+            if (m < dimM - 1) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m+1][s]);
+                if (s > 0) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m+1][s-1]);
+                }
+                if (s < dimS - 1) {
+                    maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m+1][s+1]);
+                }
+            }
+            if (s > 0) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m][s-1]);
+            }
+            if (s < dimS - 1) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i+1][m][s+1]);
+            }
+        }
+    
+        if (m > 0) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i][m-1][s]);
+            if (s > 0) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i][m-1][s-1]);
+            }
+            if (s < dimS - 1) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i][m-1][s+1]);
+            }
+        }
+        if (m < dimM - 1) {
+            maxTreasure = Math.max(maxTreasure, P[r-1][i][m+1][s]);
+            if (s > 0) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i][m+1][s-1]);
+            }
+            if (s < dimS - 1) {
+                maxTreasure = Math.max(maxTreasure, P[r-1][i][m+1][s+1]);
+            }
+        }
+    
+        return maxTreasure;
+    }
+
+    public int adderThreeCharacters(int[][] A, int r, int i, int m, int s) {
+        int R = A.length;
+    
+        int indiValue = A[r][i];
+        int marionValue = A[r][m];
+        int salahValue = A[R-1-r][s];
+    
+        // Indiana y Marion están en la misma casilla antes de la mitad de la pirámide
+        if (r < R/2 && i == m) return indiValue + salahValue;
+    
+        // Los tres personajes caen en la misma casilla en la mitad de la pirámide
+        if (r == R/2 && i == m && i == s) return indiValue;
+    
+        // Indiana y Marion están en la misma casilla en la mitad de la pirámide, pero Salah no
+        if (r == R/2 && i == m && i != s) return indiValue + salahValue;
+    
+        // Indiana y Salah caen en la misma casilla en la mitad de la pirámide, pero Marion no
+        if (r == R/2 && i == s && i != m) return indiValue + marionValue;
+    
+        // Marion y Salah caen en la misma casilla en la mitad de la pirámide, pero Indiana no
+        if (r == R/2 && m == s && i != m) return indiValue + salahValue;
+    
+        // Los tres estan en casillas diferentes
+        return indiValue + marionValue + salahValue;
+    }
+
+    public int adderTwoCharactersNoSalah(int[][] A, int r, int i, int m){
+
+        int indiValue = A[r][i];
+        int marionValue = A[r][m];
+
+        // Indiana y Marion están en la misma casilla
+        if (i == m) return indiValue;
+
+        //Indiana y Marion no están en la misma casilla
+        return indiValue + marionValue;
+    }
+
+    public int adderTwoCharactersWithSalah(int[][] A, int r, int p1, int s){
+        int R = A.length;
+
+        int p1Value = A[r][p1];
+        int salahValue = A[r][s];
+
+        // El otro personaje y Salah caen en la misma casilla en la mitad e la piramide
+        if (r == R/2 && p1 == s) return salahValue;
+
+        //El otro personaje y Salah no están en la misma casilla
+        return p1Value + salahValue;
+    }
+
+    public int solvePathsTwoCharactersNoSalah(int[][] A){
+        int R = A.length;
+        int C = A[0].length;
+
+        int [][][] P = new int[R/2 + 1][C][C];
+
+        int inf = Integer.MIN_VALUE;
+
+        for(int r=0 ; r <= R/2 ; r++){
+            for(int i=0 ; i < C ; i++){
+                for(int m=0 ; m < C ; m++){
+                    if(r==0 && i==0 && m==C-1){
+                        P[r][i][m] = 0;
+                    }
+                    else if ((r==0 && (i>0 || m<C-1)) || A[r][i]==-1 || A[r][m]==-1){
+                        P[r][i][m] = inf;
+                    }
+                    else{
+                        P[r][i][m] = getPreviousMax(P,r,i,m) + adderTwoCharactersNoSalah(A,r,i,m); 
+                    }
+                }
+            }
+        }
+
+        int result = P[R/2][0][0];
+        int aux = inf;
+        for(int i=0 ; i < C ; i++){
+            for(int m=0 ; m < C ; m++){
+                aux = P[R/2][i][m];
+                if (aux > result){
+                    result = aux;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public int solvePathsTwoCharactersNoIndiana(int[][] A){
+        int R = A.length;
+        int C = A[0].length;
+
+        int [][][] P = new int[R/2 + 1][C][C];
+
+        int inf = Integer.MIN_VALUE;
+
+        for(int r=0 ; r <= R/2 ; r++){
+            for(int m=0 ; m < C ; m++){
+                for(int s=0 ; s < C ; s++){
+                    if(r==0 && m==C-1 && s==C/2){
+                        P[r][m][s] = 0;
+                    }
+                    else if ((r==0 && (m<C-1 || s!=C/2)) || A[r][m]==-1 || A[R-1-r][s]==-1){
+                        P[r][m][s] = inf;
+                    }
+                    else{
+                        P[r][m][s] = getPreviousMax(P,r,m,s) + adderTwoCharactersWithSalah(A,r,m,s); 
+                    }
+                }
+            }
+        }
+
+        int result = P[R/2][0][0];
+        int aux = inf;
+        for(int m=0 ; m < C ; m++){
+            for(int s=0 ; s < C ; s++){
+                aux = P[R/2][m][s];
+                if (aux > result){
+                    result = aux;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public int solvePathsTwoCharactersNoMarion(int[][] A){
+        int R = A.length;
+        int C = A[0].length;
+
+        int [][][] P = new int[R/2 + 1][C][C];
+
+        int inf = Integer.MIN_VALUE;
+
+        for(int r=0 ; r <= R/2 ; r++){
+            for(int i=0 ; i < C ; i++){
+                for(int s=0 ; s < C ; s++){
+                    if(r==0 && i==0 && s==C/2){
+                        P[r][i][s] = 0;
+                    }
+                    else if ((r==0 && (i>0 || s!=C/2)) || A[r][i]==-1 || A[R-1-r][s]==-1){
+                        P[r][i][s] = inf;
+                    }
+                    else{
+                        P[r][i][s] = getPreviousMax(P,r,i,s) + adderTwoCharactersWithSalah(A,r,i,s); 
+                    }
+                }
+            }
+        }
+
+        int result = P[R/2][0][0];
+        int aux = inf;
+        for(int i=0 ; i < C ; i++){
+            for(int s=0 ; s < C ; s++){
+                aux = P[R/2][i][s];
+                if (aux > result){
+                    result = aux;
+                }
+            }
+        }
+
+        return result;
+    }
+    
+
+    public int solvePathsThreeCharacters(int[][] A){
+        int R = A.length;
+        int C = A[0].length;
+
+        int [][][][] P = new int[R/2 + 1][C][C][C];
+        int inf = Integer.MIN_VALUE;
+
+        for(int r=0 ; r <= R/2 ; r++){
+            for(int i=0 ; i < C ; i++){
+                for(int m=0 ; m < C ; m++){
+                    for(int s=0 ; s < C ; s++){
+                        if(r==0 && i==0 && m==C-1 && s==C/2){
+                            P[r][i][m][s] = 0;
+                        }
+                        else if ((r==0 && (i>0 || m<C-1 || s!=C/2)) || A[r][i]==-1 || A[r][m]==-1 || A[R-1-r][s]==-1){
+                            P[r][i][m][s] = inf;
+                        }
+                        else{
+                            P[r][i][m][s] = getPreviousMax(P,r,i,m,s) + adderThreeCharacters(A,r,i,m,s); 
+                        }
+                    }
+                }
+            }
+        }
+
+        int result = P[R/2][0][0][0];
+        int aux = inf;
+        for(int i=0 ; i < C ; i++){
+            for(int m=0 ; m < C ; m++){
+                for(int s=0 ; s < C ; s++){
+                    aux = P[R/2][i][m][s];
+                    if (aux > result){
+                        result = aux;
+                    }
+                }
+            }
+        }
+
+        return result;
+
+    }
+    
     public Resultado IndianaPath(int[][] A) {
         int R = A.length; 
         int C = A[0].length;
@@ -184,6 +540,22 @@ public class ProblemaP1 {
         
     }
 
+    public Boolean areDisjoint(int[][] A, int[][] Ai, int[][] Am, int[][] As){
+        int R = A.length; 
+        int C = A[0].length;
+        int count;
+        for(int i=0; i<R; i++){
+            for(int j=0; j<C;j++){
+                count = 0;
+                if (A[i][j]!=0 && Ai[i][j]==0) count++;
+                if (A[i][j]!=0 && Am[i][j]==0) count++;
+                if (A[i][j]!=0 && As[i][j]==0) count++;
+                if (count>1) return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         ProblemaP1 problema1 = new ProblemaP1();
 
@@ -195,13 +567,30 @@ public class ProblemaP1 {
             {-1, -1, 0, -1, -1}
         };
 
-        int maxIndiana = problema1.IndianaPath(A).getMaximo();
-        int maxMarion = problema1.MarionPath(A).getMaximo();
-        int maxSalah = problema1.SalahPath(A).getMaximo();
+        Resultado maxIndiana = problema1.IndianaPath(copyMatrix(A));
+        Resultado maxMarion = problema1.MarionPath(copyMatrix(A));
+        Resultado maxSalah = problema1.SalahPath(copyMatrix(A));
 
-        System.out.println("Max Indiana Path: " + maxIndiana);
-        System.out.println("Max Marion Path: " + maxMarion);
-        System.out.println("Max Salah Path: " + maxSalah);
+        int twoNoMarion = problema1.solvePathsTwoCharactersNoMarion(A);
+        int twoNoIndi = problema1.solvePathsTwoCharactersNoIndiana(A);
+        int twoNoSalah = problema1.solvePathsTwoCharactersNoSalah(A);
+
+        int threeofthem = problema1.solvePathsThreeCharacters(A);
+
+        Boolean isDisjoint = problema1.areDisjoint(A, maxIndiana.getMatriz(), 
+                                                    maxMarion.getMatriz(), 
+                                                    maxSalah.getMatriz());
+
+        System.out.println("Max Indiana Path: " + maxIndiana.getMaximo());
+        System.out.println("Max Marion Path: " + maxMarion.getMaximo());
+        System.out.println("Max Salah Path: " + maxSalah.getMaximo());
+
+        System.out.println("Paths are disjoint: " + isDisjoint);
+
+        System.out.println("Three of them: " + threeofthem);
+        System.out.println("No Indiana: " + twoNoIndi);
+        System.out.println("No Salah: " + twoNoSalah);
+        System.out.println("No Marion: " + twoNoMarion);
     }
     
 }
