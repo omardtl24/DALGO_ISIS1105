@@ -1,4 +1,4 @@
-public class Particion {
+public class ParticionArray {
 
     private int [] sets;
     private int n;
@@ -21,6 +21,7 @@ public class Particion {
     public void union(int v1, int v2){
         int s1 = find(v1);
         int s2 = find(v2);
+        if(s1==s2) return;
         int s = Math.min(s1,s2);
 
         for(int i=0; i<n ; i++){

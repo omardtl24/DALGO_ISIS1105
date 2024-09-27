@@ -1,49 +1,34 @@
-/**
- * Implementation of a structure to store partitions of the numbers from 0 to n-1
- * It corresponds to the structures named disjoint sets or union-find 
- */
 public class Partition {
-	int n;
-	//TODO: Define attributes to implement structure
-	
-	
-	/**
-	 * Builds a new partition for n elements.
-	 * Assigns each element to a different subset
-	 * @param n Number of elements to consider
-	 */
-	public Partition (int n) {
-		this.n = n;
-		//TODO: finish implementation
-	}
-	/**
-	 * Modifies the partition merging into a single subset the subsets to which the given elements belong
-	 * If the two elements belong to the same subset it leaves the structure unchanged
-	 * @param e1 Element belonging to the first subset. 0<=e1<n
-	 * @param e2 Element belonging to the second subset. 0<=e2<=n
-	 */
-	public void union (int e1, int e2) {
-		int s1 = find(e1);
-		int s2 = find(e2);
-		if(s1==s2) return;
-		//TODO: Finish immplementation
-	}
-	/**
-	 * Returns the identifier of the subset to which the given element belongs
-	 * @param e Element to find. 0<=e<n
-	 * @return int Subset to which the element belongs
-	 */
-	public int find (int e) {
-		//TODO: Implement
-		return 0;
-	}
-	/**
-	 * Determines if the two elements belong to the same subset.
-	 * @param e1 First element
-	 * @param e2 Second element
-	 * @return boolean true if e1 and e2 belong to the same subset. False otherwise
-	 */
-	public boolean sameSubsets(int e1, int e2) {
-		return find(e1)==find(e2);
-	}
+
+    private int [] parents;
+    private int [] h;
+
+    public Partition(int n){
+        parents = new int[n];
+        h = new int[n];
+        for(int i=0;i < n;i++){
+            parents[i] = i;
+            h[i]=1;
+        }   
+    }
+
+    public int find(int v){
+        if (v==parents[v]) return v;
+        int root = find(parents[v]);
+        parents[v] = root;
+        return root;
+    }
+
+    public boolean sameSubsets(int v1, int v2){
+        return find(v1)==find(v2);
+    }
+
+    public void union(int v1, int v2){
+        int s1 = find(v1);
+        int s2 = find(v2);
+        if(s1==s2) return;
+        if(h[s1]<h[2]) parents[s1]=s2;
+        parents[s2] = s1;
+        if(h[s1]==h[s2]) h[s1]++;
+    }
 }
