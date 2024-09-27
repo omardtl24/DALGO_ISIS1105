@@ -1,0 +1,6 @@
+**/*.class
+
+**/__pycache__/
+**/*.py[cod]
+
+**/settings.json
