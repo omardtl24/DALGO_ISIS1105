@@ -213,7 +213,7 @@ public class ProblemaP1 {
         int R = A.length;
 
         int p1Value = A[r][p1];
-        int salahValue = A[r][s];
+        int salahValue = A[R-1-r][s];
 
         // El otro personaje y Salah caen en la misma casilla en la mitad e la piramide
         if (r == R/2 && p1 == s) return salahValue;
@@ -556,15 +556,45 @@ public class ProblemaP1 {
         return true;
     }
 
+    public int solvePathProblems(int[][] A){
+
+        Resultado maxIndiana = IndianaPath(copyMatrix(A));
+        Resultado maxMarion = MarionPath(copyMatrix(A));
+        Resultado maxSalah = SalahPath(copyMatrix(A));
+
+        Boolean iPath = maxIndiana.getMaximo() >= 0;
+        Boolean mPath = maxMarion.getMaximo() >= 0;
+        Boolean sPath = maxSalah.getMaximo() >= 0;
+
+        Boolean disjoint = areDisjoint(A, maxIndiana.getMatriz(), 
+                                          maxMarion.getMatriz(), 
+                                          maxSalah.getMatriz());
+
+        if(!iPath && !mPath && !sPath) return -1;
+
+        if(iPath && !mPath && !sPath) return maxIndiana.getMaximo();
+        if(!iPath && mPath && !sPath) return maxMarion.getMaximo();
+        if(!iPath && !mPath && sPath) return maxSalah.getMaximo();
+        
+
+        if(!iPath && mPath && sPath) return solvePathsTwoCharactersNoIndiana(A);
+        if(iPath && !mPath && sPath) return solvePathsTwoCharactersNoMarion(A);
+        if(iPath && mPath && !sPath) return solvePathsTwoCharactersNoSalah(A);
+
+        if(disjoint) return  maxIndiana.getMaximo() + maxMarion.getMaximo() +  maxSalah.getMaximo();
+        return solvePathsThreeCharacters(A);
+        
+    }
+
     public static void main(String[] args) {
         ProblemaP1 problema1 = new ProblemaP1();
 
         int[][] A = {
-            {0, -1, -1, -1, 0},
-            {2, 3, -1, 5, 4},
-            {-1, 5, 15, 2, 7},
-            {-1, 1, -1, 2, -1},
-            {-1, -1, 0, -1, -1}
+            {0,784,0},
+            {-1,941,695},
+            {236,319,478},
+            {-1,-1,150},
+            {-1,0,154}
         };
 
         Resultado maxIndiana = problema1.IndianaPath(copyMatrix(A));
@@ -591,6 +621,10 @@ public class ProblemaP1 {
         System.out.println("No Indiana: " + twoNoIndi);
         System.out.println("No Salah: " + twoNoSalah);
         System.out.println("No Marion: " + twoNoMarion);
+
+        int fullsol = problema1.solvePathProblems(A);
+
+        System.out.println("Full Solution: " +  fullsol);
     }
     
 }
