@@ -4,7 +4,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class ProblemaP1 {
-
+    /**
+     * La clase {@code Resultado} es una clase auxiliar para retornar un entero y 
+     * una matriz de una misma función.
+     * 
+     * Solo cuenta con los getters de sus atributos
+     *
+     */
     public class Resultado {
         private int maximo;
         private int[][] matriz;
@@ -24,7 +30,15 @@ public class ProblemaP1 {
             return matriz;
         }
     }
-
+    /**
+     * Retorna una copia exacta de una matriz.
+     *
+     * @param original Matriz que se desea copiar (Dimensiones R x C).
+     * @return Copia exacta de la matriz de entrada (Dimensiones R x C).
+     * 
+     * Complejidad temporal: O(RC)
+     * Complejidad espacial: O(RC)
+     */
     public static int[][] copyMatrix(int[][] original) {
         int rows = original.length;
         int cols = original[0].length;
@@ -39,7 +53,19 @@ public class ProblemaP1 {
         
         return copy;
     }
-
+     /**
+     * Retorna el caso maximo requerido por la recurrencia de dos personajes.
+     * Simula el llamado recursivo que se usa en DP 
+     *
+     * @param P Estructura que memoiza los diferentes casos recursivos (Dimensiones R x C x C).
+     * @param r Fila relativa en la que estan los personajes
+     * @param i Columna en la que se encuentra el personaje 1
+     * @param m Columna en la que se encuentra en personaje 2
+     * @return Dependencia que cumpla con la condición de ser aquella que maximiza las reliquias.
+     * 
+     * Complejidad temporal: O(1)
+     * Complejidad espacial: O(1)
+     */
     public int getPreviousMax(int[][][] P, int r, int i, int m) {
         int maxTreasure = P[r-1][i][m];
     
@@ -81,7 +107,20 @@ public class ProblemaP1 {
         return maxTreasure;
     }
     
-
+     /**
+     * Retorna el caso maximo requerido por la recurrencia de tres personajes.
+     * Simula el llamado recursivo que se usa en DP 
+     *
+     * @param P Estructura que memoiza los diferentes casos recursivos (Dimensiones R x C x C x C).
+     * @param r Fila relativa en la que estan los personajes
+     * @param i Columna en la que se encuentra el personaje 1
+     * @param m Columna en la que se encuentra en personaje 2
+     * @param s Columna en la que se encuentra en personaje 3
+     * @return Dependencia que cumpla con la condición de ser aquella que maximiza las reliquias.
+     * 
+     * Complejidad temporal: O(1)
+     * Complejidad espacial: O(1)
+     */
     public int getPreviousMax(int[][][][] P, int r, int i, int m, int s) {
         int maxTreasure = P[r-1][i][m][s];
     
@@ -173,7 +212,20 @@ public class ProblemaP1 {
     
         return maxTreasure;
     }
-
+    /**
+     * Retorna la cantidad de reliquias que pueden recoger los tres personajes.
+     * Si llegan a la misma casilla, solo uno puede recoger las reliquias 
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @param r Fila relativa en la que estan los personajes
+     * @param i Columna en la que se encuentra el personaje 1
+     * @param m Columna en la que se encuentra en personaje 2
+     * @param s Columna en la que se encuentra en personaje 3
+     * @return Cantidad de reliquias que se pueden recoger con la especificación dada.
+     * 
+     * Complejidad temporal: O(1)
+     * Complejidad espacial: O(1)
+     */
     public int adderThreeCharacters(int[][] A, int r, int i, int m, int s) {
         int R = A.length;
     
@@ -199,7 +251,19 @@ public class ProblemaP1 {
         // Los tres estan en casillas diferentes
         return indiValue + marionValue + salahValue;
     }
-
+    /**
+     * Retorna la cantidad de reliquias que pueden recoger los dos personajes que inician de la parte superior.
+     * Si llegan a la misma casilla, solo uno puede recoger las reliquias 
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @param r Fila relativa en la que estan los personajes
+     * @param i Columna en la que se encuentra el personaje 1
+     * @param m Columna en la que se encuentra en personaje 2
+     * @return Cantidad de reliquias que se pueden recoger con la especificación dada.
+     * 
+     * Complejidad temporal: O(1)
+     * Complejidad espacial: O(1)
+     */
     public int adderTwoCharactersNoSalah(int[][] A, int r, int i, int m){
 
         int indiValue = A[r][i];
@@ -211,7 +275,20 @@ public class ProblemaP1 {
         //Indiana y Marion no están en la misma casilla
         return indiValue + marionValue;
     }
-
+    /**
+     * Retorna la cantidad de reliquias que pueden recoger los dos personajes que inician uno en la parte superior
+     * y el otro en la parte inferior.
+     * Si llegan a la misma casilla, solo uno puede recoger las reliquias 
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @param r Fila relativa en la que estan los personajes
+     * @param p1 Columna en la que se encuentra el personaje que inicio de la parte superior
+     * @param s Columna en la que se encuentra en personaje que inicio de la parte inferior
+     * @return Cantidad de reliquias que se pueden recoger con la especificación dada.
+     * 
+     * Complejidad temporal: O(1)
+     * Complejidad espacial: O(1)
+     */
     public int adderTwoCharactersWithSalah(int[][] A, int r, int p1, int s){
         int R = A.length;
 
@@ -224,7 +301,16 @@ public class ProblemaP1 {
         //El otro personaje y Salah no están en la misma casilla
         return p1Value + salahValue;
     }
-
+    /**
+     * Retorna la cantidad de reliquias maxima que pueden recoger Marion e Indiana
+     * suponiendo que Salah muere en el trayecto
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @return Cantidad de reliquias que pueden recoger Indiana y Marion si Salah muere.
+     * 
+     * Complejidad temporal: O(RC²)
+     * Complejidad espacial: O(RC²)
+     */
     public int solvePathsTwoCharactersNoSalah(int[][] A){
         int R = A.length;
         int C = A[0].length;
@@ -262,7 +348,16 @@ public class ProblemaP1 {
 
         return result;
     }
-
+    /**
+     * Retorna la cantidad de reliquias maxima que pueden recoger Marion y Salah
+     * suponiendo que Indiana muere en el trayecto
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @return Cantidad de reliquias que pueden recoger Salah y Marion si Indiana muere.
+     * 
+     * Complejidad temporal: O(RC²)
+     * Complejidad espacial: O(RC²)
+     */
     public int solvePathsTwoCharactersNoIndiana(int[][] A){
         int R = A.length;
         int C = A[0].length;
@@ -300,6 +395,16 @@ public class ProblemaP1 {
 
         return result;
     }
+    /**
+     * Retorna la cantidad de reliquias maxima que pueden recoger Salah e Indiana
+     * suponiendo que Marion muere en el trayecto
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @return Cantidad de reliquias que pueden recoger Indiana y Salah si Marion muere.
+     * 
+     * Complejidad temporal: O(RC²)
+     * Complejidad espacial: O(RC²)
+     */
 
     public int solvePathsTwoCharactersNoMarion(int[][] A){
         int R = A.length;
@@ -339,7 +444,16 @@ public class ProblemaP1 {
         return result;
     }
     
-
+    /**
+     * Retorna la cantidad de reliquias maxima que pueden recoger Indiana, Marion y Salah
+     * suponiendo que los tres sobreviven
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @return Cantidad de reliquias que pueden recoger Salah, Indiana y Marion.
+     * 
+     * Complejidad temporal: O(RC³)
+     * Complejidad espacial: O(RC³)
+     */
     public int solvePathsThreeCharacters(int[][] A){
         int R = A.length;
         int C = A[0].length;
@@ -381,7 +495,15 @@ public class ProblemaP1 {
         return result;
 
     }
-    
+    /**
+     * Retorna la cantidad de reliquias maxima suponiendo que solo Indiana sobrevive
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @return Cantidad de reliquias que puede recoger Indiana si Salah y Marion mueren.
+     * 
+     * Complejidad temporal: O(RC)
+     * Complejidad espacial: O(RC)
+     */
     public Resultado IndianaPath(int[][] A) {
         int R = A.length; 
         int C = A[0].length;
@@ -434,7 +556,15 @@ public class ProblemaP1 {
         }
         return new Resultado(max, A);
     }
-
+    /**
+     * Retorna la cantidad de reliquias maxima suponiendo que solo Marion sobrevive
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @return Cantidad de reliquias que puede recoger Marion si Salah e Indiana mueren.
+     * 
+     * Complejidad temporal: O(RC)
+     * Complejidad espacial: O(RC)
+     */
     public Resultado MarionPath(int[][] A) {
         int R = A.length; 
         int C = A[0].length;
@@ -487,7 +617,15 @@ public class ProblemaP1 {
         }
         return new Resultado(max, A);
     }
-
+    /**
+     * Retorna la cantidad de reliquias maxima suponiendo que solo Salah sobrevive
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @return Cantidad de reliquias que puede recoger Salah si Marion e Indiana mueren.
+     * 
+     * Complejidad temporal: O(RC)
+     * Complejidad espacial: O(RC)
+     */
     public Resultado SalahPath(int[][] A) {
         int R = A.length; 
         int C = A[0].length;
@@ -542,7 +680,18 @@ public class ProblemaP1 {
         return new Resultado(max, A);
         
     }
-
+    /**
+     * Verifica si el camino maximo de cada personaje se llega a cruzar con el de otro (Si los caminos disjuntos)
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @param Ai Matriz con el camino tomado por Indiana, donde estuvo las reliquias son ceros (Dimensiones R x C).
+     * @param Am Matriz con el camino tomado por Marion, donde estuvo las reliquias son ceros (Dimensiones R x C).
+     * @param As Matriz con el camino tomado por Salah, donde estuvo las reliquias son ceros (Dimensiones R x C).
+     * @return Si los caminos son disjuntos o no.
+     * 
+     * Complejidad temporal: O(RC)
+     * Complejidad espacial: O(1)
+     */
     public Boolean areDisjoint(int[][] A, int[][] Ai, int[][] Am, int[][] As){
         int R = A.length; 
         int C = A[0].length;
@@ -558,33 +707,49 @@ public class ProblemaP1 {
         }
         return true;
     }
-
+    /**
+     * Resuelve el problema de maximización de reliquias. Tiene los siguientes casos:
+     *  - Si los tres personajes mueren retorna -1
+     *  - Recupera el maximo de reliquias de los personajes que sobrevivan.
+     *  - Evita calcular el problema mas pesado si identifica que los tres personajes sobreviven y
+     *    sus caminos son disjuntos
+     *
+     * @param A Matriz que representa la cantidad de reliquias o maldiciones en cada posición (Dimensiones R x C).
+     * @param Ai Matriz con el camino tomado por Indiana, donde estuvo las reliquias son ceros (Dimensiones R x C).
+     * @param Am Matriz con el camino tomado por Marion, donde estuvo las reliquias son ceros (Dimensiones R x C).
+     * @param As Matriz con el camino tomado por Salah, donde estuvo las reliquias son ceros (Dimensiones R x C).
+     * @return Si los caminos son disjuntos o no.
+     * 
+     * Complejidad temporal: O(RC³)
+     * Complejidad espacial: O(RC³)
+     */
     public int solvePathProblems(int[][] A){
-
+        //Calculo el camino independiente de cada personaje
         Resultado maxIndiana = IndianaPath(copyMatrix(A));
         Resultado maxMarion = MarionPath(copyMatrix(A));
         Resultado maxSalah = SalahPath(copyMatrix(A));
-
+        //Determina si los personajes sobrevivieron o no
         Boolean iPath = maxIndiana.getMaximo() >= 0;
         Boolean mPath = maxMarion.getMaximo() >= 0;
         Boolean sPath = maxSalah.getMaximo() >= 0;
-
+        //Verifica que los caminos son disjuntos
         Boolean disjoint = areDisjoint(A, maxIndiana.getMatriz(), 
                                           maxMarion.getMatriz(), 
                                           maxSalah.getMatriz());
-
+        //Si los tres personajes mueren devuelve -1
         if(!iPath && !mPath && !sPath) return -1;
-
+        //Si 1 personaje vive, retorna el maximo de su camino
         if(iPath && !mPath && !sPath) return maxIndiana.getMaximo();
         if(!iPath && mPath && !sPath) return maxMarion.getMaximo();
         if(!iPath && !mPath && sPath) return maxSalah.getMaximo();
-        
-
+        //Si 2 personajes viven, retorna el maximo de sus recorridos
         if(!iPath && mPath && sPath) return solvePathsTwoCharactersNoIndiana(A);
         if(iPath && !mPath && sPath) return solvePathsTwoCharactersNoMarion(A);
         if(iPath && mPath && !sPath) return solvePathsTwoCharactersNoSalah(A);
-
+        //Si los tres sobreviven y los caminos son disjuntos, retorna la suma de los tres
         if(disjoint) return  maxIndiana.getMaximo() + maxMarion.getMaximo() +  maxSalah.getMaximo();
+        //Si los tres sobreviven y los caminos no son disjuntos, calcula el resultado mas robusto
+        //Este seria el peor caso que deriva en la complejidad O(RC³)
         return solvePathsThreeCharacters(A);
         
     }
