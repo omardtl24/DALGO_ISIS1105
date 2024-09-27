@@ -3,10 +3,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ * Desarrollo del Proyecto 1 - DALGO. 
+ * @author Jose Miguel Alvear Zapata - 202010602
+ * @author Omar David Toledo Leguizamón - 202424446
+ *
+ */
+
 public class ProblemaP1 {
     /**
      * La clase {@code Resultado} es una clase auxiliar para retornar un entero y 
-     * una matriz de una misma función.
+     * una matriz desde una misma función.
      * 
      * Solo cuenta con los getters de sus atributos
      *
