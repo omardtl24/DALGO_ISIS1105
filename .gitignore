@@ -4,3 +4,9 @@
 **/*.py[cod]
 
 **/settings.json
+
+**/.settings
+
+**/.project
+
+**/.classpath
