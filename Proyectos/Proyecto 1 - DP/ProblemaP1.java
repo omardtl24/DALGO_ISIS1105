@@ -779,12 +779,10 @@ public class ProblemaP1 {
                             matriz[i][j] = Integer.parseInt(elementos[j]);
                         }
                     }
-
                     try{
                         sol = -1;
                         sol = problema1.solvePathProblems(matriz);
                         System.out.println(sol);
-                        //line = br.readLine();
                     }catch(Exception e){
 
                     }
