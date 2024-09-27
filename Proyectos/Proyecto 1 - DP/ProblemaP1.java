@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class ProblemaP1 {
@@ -588,43 +591,45 @@ public class ProblemaP1 {
 
     public static void main(String[] args) {
         ProblemaP1 problema1 = new ProblemaP1();
+        int sol;
+        try ( 
+			InputStreamReader is= new InputStreamReader(System.in);
+			BufferedReader br = new BufferedReader(is);
+		) {
+			String line = br.readLine();
+			int casos = Integer.parseInt(line);
+			
+            for (int caso = 0; caso < casos; caso++) {
+                line = br.readLine();
+                if (line != null) {
+                    String[] dimensiones = line.split(" ");
+                    int r = Integer.parseInt(dimensiones[0]);
+                    int c = Integer.parseInt(dimensiones[1]);
 
-        int[][] A = {
-            {0,784,0},
-            {-1,941,695},
-            {236,319,478},
-            {-1,-1,150},
-            {-1,0,154}
-        };
+                    int[][] matriz = new int[r][c];
+                    for (int i = 0; i < r; i++) {
+                        line = br.readLine();
+                        String[] elementos = line.split(" ");
+                        for (int j = 0; j < c; j++) {
+                            matriz[i][j] = Integer.parseInt(elementos[j]);
+                        }
+                    }
 
-        Resultado maxIndiana = problema1.IndianaPath(copyMatrix(A));
-        Resultado maxMarion = problema1.MarionPath(copyMatrix(A));
-        Resultado maxSalah = problema1.SalahPath(copyMatrix(A));
+                    try{
+                        sol = -1;
+                        sol = problema1.solvePathProblems(matriz);
+                        System.out.println(sol);
+                        //line = br.readLine();
+                    }catch(Exception e){
 
-        int twoNoMarion = problema1.solvePathsTwoCharactersNoMarion(A);
-        int twoNoIndi = problema1.solvePathsTwoCharactersNoIndiana(A);
-        int twoNoSalah = problema1.solvePathsTwoCharactersNoSalah(A);
+                    }
+                }
+            }
 
-        int threeofthem = problema1.solvePathsThreeCharacters(A);
-
-        Boolean isDisjoint = problema1.areDisjoint(A, maxIndiana.getMatriz(), 
-                                                    maxMarion.getMatriz(), 
-                                                    maxSalah.getMatriz());
-
-        System.out.println("Max Indiana Path: " + maxIndiana.getMaximo());
-        System.out.println("Max Marion Path: " + maxMarion.getMaximo());
-        System.out.println("Max Salah Path: " + maxSalah.getMaximo());
-
-        System.out.println("Paths are disjoint: " + isDisjoint);
-
-        System.out.println("Three of them: " + threeofthem);
-        System.out.println("No Indiana: " + twoNoIndi);
-        System.out.println("No Salah: " + twoNoSalah);
-        System.out.println("No Marion: " + twoNoMarion);
-
-        int fullsol = problema1.solvePathProblems(A);
-
-        System.out.println("Full Solution: " +  fullsol);
+		} catch (IOException e) {
+            System.err.println("Error al leer entrada estándar: " + e.getMessage());
+        }
     }
+        
     
 }
