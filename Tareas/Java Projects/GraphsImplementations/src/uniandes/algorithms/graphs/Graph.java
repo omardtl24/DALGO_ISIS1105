@@ -33,8 +33,12 @@ public class Graph {
     private List<List<Integer>> edges; // Change to List<List<Integer>>
     private Map<IntArrayKey, Integer> costs = new HashMap<>();
     private List<int[]> edgesList = new ArrayList<>();
+    private boolean directed;
+    private boolean weighted;
 
-    public Graph(List<int[]> input, int numNodes) {
+    public Graph(List<int[]> input, int numNodes, boolean d, boolean w) throws Exception {
+    	directed = d;
+    	weighted = w;
         nodes = numNodes;
         edges = new ArrayList<>(nodes); // Initialize the list with capacity
         for (int i = 0; i < nodes; i++) {
@@ -44,18 +48,31 @@ public class Graph {
         for (int[] edge : input) {
             int fromNode = edge[0];
             int toNode = edge[1];
-            int cost = edge[2];
-
-            costs.put(new IntArrayKey(new int[]{fromNode, toNode}), cost);
-            edges.get(fromNode).add(toNode); // Use get to add adjacent nodes
-            edgesList.add(new int[]{fromNode, toNode});
+            int cost;
+            if(weighted)  cost= edge[2];
+            else cost = 0;
+            
+            if(cost(fromNode,toNode) < Integer.MAX_VALUE) throw new Exception("Repeated edge can't be stored");
+            
+            if(directed) {
+            	costs.put(new IntArrayKey(new int[]{fromNode, toNode}), cost);
+            	edges.get(fromNode).add(toNode); // Use get to add adjacent nodes
+                edgesList.add(new int[]{fromNode, toNode});
+            }else {
+            	costs.put(new IntArrayKey(new int[]{fromNode, toNode}), cost);
+            	costs.put(new IntArrayKey(new int[]{toNode, fromNode}), cost);
+            	edges.get(fromNode).add(toNode); // Use get to add adjacent nodes
+            	edges.get(toNode).add(fromNode);
+                edgesList.add(new int[]{fromNode, toNode});
+            }
+            
         }
     }
 
     public int cost(int source, int destiny) {
         IntArrayKey edge = new IntArrayKey(new int[]{source, destiny});
         Integer value = costs.get(edge);
-        return value == null ? Integer.MAX_VALUE : value;
+        return value == null || !weighted? Integer.MAX_VALUE : value;
     }
 
     public List<Integer> adj(int u) {
@@ -68,5 +85,9 @@ public class Graph {
 
     public int numNodes() {
         return nodes;
+    }
+    
+    public boolean isDirected() {
+    	return directed;
     }
 }

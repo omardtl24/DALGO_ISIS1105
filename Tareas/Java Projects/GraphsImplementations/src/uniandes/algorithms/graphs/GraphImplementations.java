@@ -39,11 +39,10 @@ public class GraphImplementations {
             return;
         }
 
-        graph = new Graph(edges, numNodes);
-
-        MinimumCost minCost;
-
         if(mode.equals("minCost")){
+        	graph = new Graph(edges, numNodes, true, true);
+            MinimumCost minCost;
+            
 	        if(action.equals("Dijkstra"))  minCost = new DijkstraMinCost();
 	        else if(action.equals("BellmanFord")) minCost = new BellmanFordMinCost();
 	        else if(action .equals("FloydWarshall")) minCost = new FloydWarshallMinCost();
