@@ -8,14 +8,14 @@ public class FloydWarshallMinCost implements MinimumCost {
      *              Integer.MAX_VALUE is used to indicate no direct connection.
      * @return A 2D array representing the minimum cost between all pairs of nodes.
      */
-    public int [][] getMinCostMatrix(int [][] graph){
-        int n = graph.length;
+    public int [][] getMinCostMatrix(Graph graph){
+        int n = graph.numNodes();
         int[][] m = new int[n][n];
 
         for (int k=0;k<=n;k++){
             for(int i=0;i<n;i++){
                 for(int j=0;j<n;j++){
-                    if (k==0) m[i][j] = graph[i][j];
+                    if (k==0) m[i][j] = graph.cost(i, j);
                     if (k>0 && i!=k-1 && j!=k-1) m[i][j] = Math.min(m[i][j],adder(m[i][k-1],m[k-1][j]));
                 }
             }

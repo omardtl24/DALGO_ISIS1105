@@ -17,7 +17,7 @@ public class GraphImplementations {
         long startTime;
         long endTime;
         long duration;
-        int[][] graph;
+        Graph graph;
 
         List<int[]> edges = new ArrayList<>();
 
@@ -31,7 +31,7 @@ public class GraphImplementations {
                     int toNode = Integer.parseInt(parts[1]);
                     int cost = Integer.parseInt(parts[2]);
                     edges.add(new int[]{fromNode, toNode, cost}); // Store the edge
-                    numNodes = Math.max(numNodes,Math.max(fromNode,toNode));
+                    numNodes = Math.max(numNodes,Math.max(fromNode,toNode)+1);
                 }
             }
         } catch (IOException e) {
@@ -39,19 +39,7 @@ public class GraphImplementations {
             return;
         }
 
-        graph = new int[numNodes+1][numNodes+1];
-        for (int i = 0; i < numNodes; i++) {
-            Arrays.fill(graph[i], Integer.MAX_VALUE); // Assume no edge is present initially
-            graph[i][i] = 0; // Cost to reach itself is 0
-        }
-
-        // Populate the matrix using the edges
-        for (int[] edge : edges) {
-            int fromNode = edge[0];
-            int toNode = edge[1];
-            int cost = edge[2];
-            graph[fromNode][toNode] = cost; // Populate the adjacency matrix
-        }
+        graph = new Graph(edges, numNodes);
 
         MinimumCost minCost;
 
