@@ -3,7 +3,7 @@ package uniandes.algorithms.graphs;
 import java.util.Arrays;
 
 public class BellmanFordMinCost implements MinimumCost{
-    public int [][] getMinCostMatrix(Graph graph){
+    public int [][] getMinCostMatrix(WeightedDiGraph graph) throws Exception{
     	int n = graph.numNodes();
         int[][] m = new int[n][n];
         for(int i=0; i<n;i++) {
@@ -12,7 +12,7 @@ public class BellmanFordMinCost implements MinimumCost{
         return m;
     }
 
-    public int[] BellmanFord(int source, Graph graph ){
+    public int[] BellmanFord(int source, WeightedDiGraph graph ) throws Exception{
     	int n = graph.numNodes();
     	int[] distance = new int[n];
     	boolean[] visited = new boolean[n];
@@ -21,9 +21,10 @@ public class BellmanFordMinCost implements MinimumCost{
     	distance[source] = 0;
     	
     	for(int i=1;i<n-1;i++) {
-    		for(int[] edge: graph.edges()) {
-    			int u = edge[0];
-    			int v = edge[1];
+    		for(EdgeArray edge:  graph.edges()) {
+    			int[] array = edge.getEdge();
+    			int u = array[0];
+    			int v = array[1];
     			relax(u,v,graph,distance);
     		}
     	}
@@ -37,8 +38,9 @@ public class BellmanFordMinCost implements MinimumCost{
      * @param graph Representation of graph weights
      * @param distance Minimum relative distances from source to any other nodes
      * @param pQ Priority queue to store the new distances
+     * @throws Exception 
      */
-    public void relax(int u, int v, Graph graph, int[] distance) {
+    public void relax(int u, int v, WeightedDiGraph graph, int[] distance) throws Exception {
         int edgeCost = graph.cost(u, v);
         int newDistance = adder(distance[u], edgeCost);
         

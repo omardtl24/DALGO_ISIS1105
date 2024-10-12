@@ -3,91 +3,66 @@ package uniandes.algorithms.graphs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
-public class Graph {
+/**
+ * Abstract class representing a graph structure. It is intended to be subclassed
+ * for specific types of graphs (e.g., directed, undirected).
+ */
+public abstract class Graph {
 
-    class IntArrayKey {
-        private final int[] key;
+    // Number of nodes in the graph
+    protected int numNodes;
 
-        public IntArrayKey(int[] key) {
-            this.key = key;
-        }
+    // Adjacency list representing the graph, where each node has a list of adjacent nodes.
+    protected List<List<Integer>> adjacency;
 
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof IntArrayKey)) return false;
-            IntArrayKey other = (IntArrayKey) obj;
-            return Arrays.equals(this.key, other.key);
-        }
+    // List of edges in the graph, each represented as a pair of integers (two nodes).
+    protected List<EdgeArray> edges;
 
-        @Override
-        public int hashCode() {
-            return Arrays.hashCode(key);
-        }
-    }
-
-    private int nodes;
-    private List<List<Integer>> edges; // Change to List<List<Integer>>
-    private Map<IntArrayKey, Integer> costs = new HashMap<>();
-    private List<int[]> edgesList = new ArrayList<>();
-    private boolean directed;
-    private boolean weighted;
-
-    public Graph(List<int[]> input, int numNodes, boolean d, boolean w) throws Exception {
-    	directed = d;
-    	weighted = w;
-        nodes = numNodes;
-        edges = new ArrayList<>(nodes); // Initialize the list with capacity
-        for (int i = 0; i < nodes; i++) {
-            edges.add(new ArrayList<>()); // Initialize each inner list
-        }
-
-        for (int[] edge : input) {
-            int fromNode = edge[0];
-            int toNode = edge[1];
-            int cost;
-            if(weighted)  cost= edge[2];
-            else cost = 0;
-            
-            if(cost(fromNode,toNode) < Integer.MAX_VALUE) throw new Exception("Repeated edge can't be stored");
-            
-            if(directed) {
-            	costs.put(new IntArrayKey(new int[]{fromNode, toNode}), cost);
-            	edges.get(fromNode).add(toNode); // Use get to add adjacent nodes
-                edgesList.add(new int[]{fromNode, toNode});
-            }else {
-            	costs.put(new IntArrayKey(new int[]{fromNode, toNode}), cost);
-            	costs.put(new IntArrayKey(new int[]{toNode, fromNode}), cost);
-            	edges.get(fromNode).add(toNode); // Use get to add adjacent nodes
-            	edges.get(toNode).add(fromNode);
-                edgesList.add(new int[]{fromNode, toNode});
-            }
-            
+    /**
+     * Constructor for the Graph class. Checks basic elements for graph.
+     * 
+     * @param input List of edges, where each edge is represented as an array of two integers (nodes).
+     * @param n     Number of nodes in the graph.
+     * @throws Exception if the edge list is empty or the number of nodes is zero.
+     */
+    public Graph(List<int[]> input, int n) throws Exception {
+        if (input.isEmpty() || n == 0) throw new Exception("An empty graph can't be created");
+        numNodes = n;
+        adjacency = new ArrayList<>(numNodes); // Initialize the list with capacity
+        edges = new ArrayList<>();
+        for (int i = 0; i < numNodes; i++) {
+        	adjacency.add(new ArrayList<Integer>()); // Initialize each inner list
         }
     }
 
-    public int cost(int source, int destiny) {
-        IntArrayKey edge = new IntArrayKey(new int[]{source, destiny});
-        Integer value = costs.get(edge);
-        return value == null || !weighted? Integer.MAX_VALUE : value;
-    }
-
+    /**
+     * Returns the list of adjacent nodes for a given node.
+     * 
+     * @param u The node for which adjacent nodes are requested.
+     * @return List of adjacent nodes.
+     */
     public List<Integer> adj(int u) {
-        return edges.get(u); // Use get to return adjacent nodes
-    }
-    
-    public List<int[]> edges(){
-    	return edgesList;
+        return adjacency.get(u);
     }
 
+    /**
+     * Returns the list of edges in the graph.
+     * 
+     * @return List of edges, where each edge is an array of two integers (nodes).
+     */
+    public List<EdgeArray> edges() {
+        return edges;
+    }
+
+    /**
+     * Returns the total number of nodes in the graph.
+     * 
+     * @return Number of nodes in the graph.
+     */
     public int numNodes() {
-        return nodes;
+        return numNodes;
     }
     
-    public boolean isDirected() {
-    	return directed;
-    }
+    public abstract int cost(int source, int destiny) throws Exception;
 }

@@ -7,8 +7,9 @@ public class FloydWarshallMinCost implements MinimumCost {
      * @param graph A 2D array representing the graph, where graph[i][j] is the cost from node i to node j.
      *              Integer.MAX_VALUE is used to indicate no direct connection.
      * @return A 2D array representing the minimum cost between all pairs of nodes.
+	 * @throws Exception 
      */
-    public int [][] getMinCostMatrix(Graph graph){
+    public int [][] getMinCostMatrix(WeightedDiGraph graph) throws Exception{
         int n = graph.numNodes();
         int[][] m = new int[n][n];
 

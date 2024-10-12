@@ -17,7 +17,6 @@ public class GraphImplementations {
         long startTime;
         long endTime;
         long duration;
-        Graph graph;
 
         List<int[]> edges = new ArrayList<>();
 
@@ -40,7 +39,7 @@ public class GraphImplementations {
         }
 
         if(mode.equals("minCost")){
-        	graph = new Graph(edges, numNodes, true, true);
+        	WeightedDiGraph graph = new WeightedDiGraph(edges, numNodes);
             MinimumCost minCost;
             
 	        if(action.equals("Dijkstra"))  minCost = new DijkstraMinCost();

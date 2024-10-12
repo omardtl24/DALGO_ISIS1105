@@ -8,8 +8,9 @@ public class DijkstraMinCost implements MinimumCost{
      * in the desired graph
 	 * @param graph Representation of a directed graph
 	 * @return int [][] minimum cost for each pair of nodes 
+	 * @throws Exception 
 	 */
-    public int [][] getMinCostMatrix(Graph graph){
+    public int [][] getMinCostMatrix(WeightedDiGraph graph) throws Exception{
     	int n = graph.numNodes();
         int[][] m = new int[n][n];
         for(int i=0; i<n;i++) {
@@ -22,8 +23,9 @@ public class DijkstraMinCost implements MinimumCost{
      * @param source Node from where distances are going to be calculated
      * @param graph Representation of graph
      * @return Minimum cost from source node to all others
+     * @throws Exception 
      */
-    public int[] Dijkstra(int source, Graph graph ){
+    public int[] Dijkstra(int source, WeightedDiGraph graph ) throws Exception{
     	int n = graph.numNodes();
     	int[] distance = new int[n];
     	boolean[] visited = new boolean[n];
@@ -57,8 +59,9 @@ public class DijkstraMinCost implements MinimumCost{
      * @param graph Representation of graph weights
      * @param distance Minimum relative distances from source to any other nodes
      * @param pQ Priority queue to store the new distances
+     * @throws Exception 
      */
-    public void relax(int u, int v, Graph graph, int[] distance, PriorityQueue<int[]> pQ) {
+    public void relax(int u, int v, WeightedDiGraph graph, int[] distance, PriorityQueue<int[]> pQ) throws Exception {
         int edgeCost = graph.cost(u, v);
         int newDistance = adder(distance[u], edgeCost);
         
