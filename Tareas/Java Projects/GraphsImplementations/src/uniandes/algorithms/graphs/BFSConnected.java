@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BFSConnected implements Connected{
+public class BFSConnected implements ConnectedComponents{
 	public List<List<Integer>> getComponents(UnweightedGraph graph){
 		
 		List<List<Integer>> components = new ArrayList<>();
@@ -29,10 +29,10 @@ public class BFSConnected implements Connected{
 		
 		states[source] = 1;
 		
-		Queue<Integer> q = new LinkedList<>();
+		Queue<Integer> q = new LinkedList<Integer>();
 		
 		q.add(source);
-		while(q.isEmpty()) {
+		while(!q.isEmpty()) {
 			int u = q.poll();
 			for(int v: graph.adj(u)) {
 				if (states[v]==0) {
@@ -44,7 +44,6 @@ public class BFSConnected implements Connected{
 			states[u] = 2;
 			group.add(u);
 		}
-		
 		return group;
 	}
 }

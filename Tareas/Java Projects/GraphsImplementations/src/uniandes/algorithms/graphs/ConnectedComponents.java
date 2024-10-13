@@ -2,7 +2,7 @@ package uniandes.algorithms.graphs;
 
 import java.util.List;
 
-public interface Connected {
+public interface ConnectedComponents {
 	/*
 	 * Get a list of the disjoint components of an undirected graph
 	 */

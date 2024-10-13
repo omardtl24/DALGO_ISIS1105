@@ -2,7 +2,6 @@ package uniandes.algorithms.graphs;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Abstract class representing a graph structure. It is intended to be subclassed

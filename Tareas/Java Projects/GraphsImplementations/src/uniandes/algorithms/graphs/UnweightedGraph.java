@@ -23,6 +23,7 @@ public class UnweightedGraph extends Graph{
 
             // Add the destination node to the adjacency list of the source node.
             adjacency.get(source).add(destiny); // 'adjacency' refers to the adjacency list from the superclass.
+            adjacency.get(destiny).add(source); // 'adjacency' refers to the adjacency list from the superclass.
 
             // Add the edge to the list of edges in the superclass.
             edges.add(edge);

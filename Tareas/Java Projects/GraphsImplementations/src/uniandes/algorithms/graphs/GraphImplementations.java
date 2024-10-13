@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -35,6 +34,12 @@ public class GraphImplementations {
                     edges.add(new int[]{fromNode, toNode, cost}); // Store the edge
                     numNodes = Math.max(numNodes,Math.max(fromNode,toNode)+1);
                 }
+                if (parts.length == 2) {
+                    int fromNode = Integer.parseInt(parts[0]);
+                    int toNode = Integer.parseInt(parts[1]);
+                    edges.add(new int[]{fromNode, toNode}); // Store the edge
+                    numNodes = Math.max(numNodes,Math.max(fromNode,toNode)+1);
+                }
             }
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
@@ -49,15 +54,37 @@ public class GraphImplementations {
 	        else if(action.equals("BellmanFord")) minCost = new BellmanFordMinCost();
 	        else if(action .equals("FloydWarshall")) minCost = new FloydWarshallMinCost();
 	        else throw new IllegalArgumentException("Invalid action for minCost mode");
+	        
 	        startTime = System.nanoTime();
 	        int[][] answer = minCost.getMinCostMatrix(graph);
 	        endTime = System.nanoTime();
+	        
 	        if(print) printMinCostMatrix(answer,action);
 	        saveMatrixToFile(answer, "data/distances"+numNodes+action+"solution.txt");
+	        
 	        duration = endTime - startTime;
 	        duration/=1000;
 	        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
-            
+	        
+        }else if(mode.equals("components")) {
+        	UnweightedGraph graph = new  UnweightedGraph(edges,numNodes);
+        	ConnectedComponents conComp;
+        	
+        	if(action.equals("BFS")) conComp = new BFSConnected();
+        	else throw new IllegalArgumentException("Invalid action for components mode");
+        	
+        	startTime = System.nanoTime();
+	        List<List<Integer>> answer = conComp.getComponents(graph);
+	        endTime = System.nanoTime();
+	        
+	        if(print) printListOfLists(answer,action);
+	        saveListsToFile(answer, "data/components"+numNodes+action+"solution.txt");
+	        
+	        duration = endTime - startTime;
+	        duration/=1000;
+	        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
+        	
+        	
         }else throw new IllegalArgumentException("Invalid mode");
         
 
@@ -116,4 +143,60 @@ public class GraphImplementations {
         }
     }
     
+    /**
+     * Prints a List of Lists of integers in a specific format.
+     * 
+     * Each list is printed as an array enclosed in braces and separated by commas.
+     *
+     * @param listOfLists The List of Lists of integers to be printed.
+     */
+    public static void printListOfLists(List<List<Integer>> listOfLists, String action) {
+        StringBuilder sb = new StringBuilder();  // Efficient string construction
+        sb.append("Components found using "+action+": {");  // Start with the opening brace for the whole structure
+
+        // Loop through the outer list (list of lists)
+        for (int i = 0; i < listOfLists.size(); i++) {
+            List<Integer> innerList = listOfLists.get(i);  // Get the current inner list
+            sb.append("{");  // Add opening brace for the inner list
+
+            // Loop through each element in the inner list
+            for (int j = 0; j < innerList.size(); j++) {
+                sb.append(innerList.get(j));  // Append the element
+                if (j < innerList.size() - 1) {
+                    sb.append(",");  // Add a comma between elements in the inner list
+                }
+            }
+            
+            sb.append("}");  // Close the inner list
+            if (i < listOfLists.size() - 1) {
+                sb.append(",");  // Add a comma between inner lists
+            }
+        }
+
+        sb.append("} \n");  // Close the outer structure
+        System.out.println(sb.toString());  // Output the final formatted string
+    }
+    
+    /**
+     * Saves a list of lists of integers to a specified text file.
+     *
+     * @param lists The list of lists of integers to save.
+     * @param filePath The path to the text file where the data will be saved.
+     * @throws IOException If an I/O error occurs while writing to the file.
+     */
+    public static void saveListsToFile(List<List<Integer>> lists, String filePath) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (List<Integer> list : lists) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < list.size(); i++) {
+                    sb.append(list.get(i));
+                    if (i < list.size() - 1) {
+                        sb.append(" "); // Add space between elements
+                    }
+                }
+                writer.write(sb.toString());
+                writer.newLine(); // Write a new line after each list
+            }
+        }
+    }
 }
