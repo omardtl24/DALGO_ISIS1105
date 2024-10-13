@@ -69,6 +69,7 @@ public class WeightedDiGraph extends Graph {
         Integer value = costs.get(edge);
 
         // If the edge does not exist, return Integer.MAX_VALUE; otherwise, return the cost.
+        if(source==destiny) return 0;
         return value == null ? Integer.MAX_VALUE : value;
     }
 }

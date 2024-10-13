@@ -1,7 +1,9 @@
 package uniandes.algorithms.graphs;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +15,7 @@ public class GraphImplementations {
         String mode = args[0];
         String action = args[1];
         String inFilename = args[2];
+        boolean print = "1".equals(args[3]);
         int numNodes = 0;
         long startTime;
         long endTime;
@@ -49,10 +52,11 @@ public class GraphImplementations {
 	        startTime = System.nanoTime();
 	        int[][] answer = minCost.getMinCostMatrix(graph);
 	        endTime = System.nanoTime();
-	        printMinCostMatrix(answer,action);
+	        if(print) printMinCostMatrix(answer,action);
+	        saveMatrixToFile(answer, "data/distances"+numNodes+action+"solution.txt");
 	        duration = endTime - startTime;
 	        duration/=1000;
-	        System.out.println("Execution time in microseconds: " + duration);
+	        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
             
         }else throw new IllegalArgumentException("Invalid mode");
         
@@ -89,6 +93,27 @@ public class GraphImplementations {
             System.out.println(); // Move to the next row
         }
         System.out.println();
+    }
+    
+    /**
+     * Saves an integer matrix to a txt file with elements tab-separated.
+     *
+     * @param matrix The integer matrix to be saved.
+     * @param filename The name of the file where the matrix will be saved.
+     * @throws IOException If an I/O error occurs during file writing.
+     */
+    public static void saveMatrixToFile(int[][] matrix, String filename) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (int[] row : matrix) {
+                for (int i = 0; i < row.length; i++) {
+                    writer.write(String.valueOf(row[i]));
+                    if (i < row.length - 1) {
+                        writer.write("\t"); // Add tab between elements
+                    }
+                }
+                writer.newLine(); // Move to the next line after each row
+            }
+        }
     }
     
 }

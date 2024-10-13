@@ -15,7 +15,6 @@ public class BellmanFordMinCost implements MinimumCost{
     public int[] BellmanFord(int source, WeightedDiGraph graph ) throws Exception{
     	int n = graph.numNodes();
     	int[] distance = new int[n];
-    	boolean[] visited = new boolean[n];
     	
     	Arrays.fill(distance, Integer.MAX_VALUE);
     	distance[source] = 0;
