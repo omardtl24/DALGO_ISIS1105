@@ -13,15 +13,89 @@ public class GraphImplementations {
     public static void main(String[] args) throws Exception{
         String mode = args[0];
         String action = args[1];
-        String inFilename = args[2];
-        boolean print = "1".equals(args[3]);
-        int numNodes = 0;
+        String inFilename;
+        String inFilename1;
+        String outputFile;
+        boolean print;
         long startTime;
         long endTime;
         long duration;
+        int numNodes;
 
-        List<int[]> edges = new ArrayList<>();
+        if(mode.equals("minCost")){
+        	inFilename = args[2];
+        	outputFile = args[3];
+            print = "1".equals(args[4]);
+        	InputGraph input = getInputGraph(inFilename);
+        	List<int []> edges = input.getInput();
+        	numNodes = input.getNodes(); 
+        	WeightedDiGraph graph = new WeightedDiGraph(edges, numNodes);
+            MinimumCost minCost;
+            
+            
+	        if(action.equals("Dijkstra"))  minCost = new DijkstraMinCost();
+	        else if(action.equals("BellmanFord")) minCost = new BellmanFordMinCost();
+	        else if(action .equals("FloydWarshall")) minCost = new FloydWarshallMinCost();
+	        else throw new IllegalArgumentException("Invalid action for minCost mode");
+	        
+	        startTime = System.nanoTime();
+	        int[][] answer = minCost.getMinCostMatrix(graph);
+	        endTime = System.nanoTime();
+	        
+	        if(print) printMinCostMatrix(answer,action);
+	        saveMatrixToFile(answer, outputFile);
+	        
+        }else if(mode.equals("components")) {
+        	inFilename = args[2];
+        	outputFile = args[3];
+            print = "1".equals(args[4]);
+        	InputGraph input = getInputGraph(inFilename);
+        	List<int []> edges = input.getInput();
+        	numNodes = input.getNodes(); 
+         	UnweightedGraph graph = new  UnweightedGraph(edges,numNodes);
+        	ConnectedComponents conComp;
+        	
+        	if(action.equals("BFS")) conComp = new BFSConnected();
+        	else throw new IllegalArgumentException("Invalid action for components mode");
+        	
+        	startTime = System.nanoTime();
+	        List<List<Integer>> answer = conComp.getComponents(graph);
+	        endTime = System.nanoTime();
+	        
+	        if(print) printListOfLists(answer,action);
+	        saveListsToFile(answer, outputFile);
+        	
+        }else if(mode.equals("Problems")) {
+        	if(action.equals("CityCosts")) {
+        		inFilename = args[2];
+            	outputFile = args[3];
+                print = "1".equals(args[4]);
+        		InputGraph input = getInputGraph(inFilename);
+            	List<int []> edges = input.getInput();
+            	numNodes = input.getNodes(); 
+        		WeightedGraph graph = new WeightedGraph(edges,numNodes);
+        		MinimumSpanningTree mst = new KruskalMST();
+        		
+        		startTime = System.nanoTime();
+    	        List<int []> answer = mst.getMST(graph);
+    	        endTime = System.nanoTime();
+    	        
+    	        if(print) printPairs(answer, graph);
+    	        savePairsToFile(answer, outputFile);
+        		
+        	}else throw new IllegalArgumentException("Invalid action for components mode");
+        	
+        }else throw new IllegalArgumentException("Invalid mode");
+        
+        duration = endTime - startTime;
+        duration/=1000;
+        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
 
+    }
+    
+    public static InputGraph getInputGraph(String inFilename) {
+    	List<int[]> edges = new ArrayList<>();
+    	int numNodes = 0;
         // Read the file and parse the edges
         try (BufferedReader in = new BufferedReader(new FileReader(inFilename))) {
             String line;
@@ -43,60 +117,10 @@ public class GraphImplementations {
             }
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
-            return;
+            return null;
         }
-
-        if(mode.equals("minCost")){
-        	WeightedDiGraph graph = new WeightedDiGraph(edges, numNodes);
-            MinimumCost minCost;
-            
-	        if(action.equals("Dijkstra"))  minCost = new DijkstraMinCost();
-	        else if(action.equals("BellmanFord")) minCost = new BellmanFordMinCost();
-	        else if(action .equals("FloydWarshall")) minCost = new FloydWarshallMinCost();
-	        else throw new IllegalArgumentException("Invalid action for minCost mode");
-	        
-	        startTime = System.nanoTime();
-	        int[][] answer = minCost.getMinCostMatrix(graph);
-	        endTime = System.nanoTime();
-	        
-	        if(print) printMinCostMatrix(answer,action);
-	        saveMatrixToFile(answer, "data/distances"+numNodes+action+"solution.txt");
-	        
-        }else if(mode.equals("components")) {
-        	UnweightedGraph graph = new  UnweightedGraph(edges,numNodes);
-        	ConnectedComponents conComp;
-        	
-        	if(action.equals("BFS")) conComp = new BFSConnected();
-        	else throw new IllegalArgumentException("Invalid action for components mode");
-        	
-        	startTime = System.nanoTime();
-	        List<List<Integer>> answer = conComp.getComponents(graph);
-	        endTime = System.nanoTime();
-	        
-	        if(print) printListOfLists(answer,action);
-	        saveListsToFile(answer, "data/components"+numNodes+action+"solution.txt");
-        	
-        }else if(mode.equals("Problems")) {
-        	if(action.equals("CityCosts")) {
-        		
-        		WeightedGraph graph = new WeightedGraph(edges,numNodes);
-        		MinimumSpanningTree mst = new KruskalMST();
-        		
-        		startTime = System.nanoTime();
-    	        List<int []> answer = mst.getMST(graph);
-    	        endTime = System.nanoTime();
-    	        
-    	        if(print) printPairs(answer, graph);
-    	        savePairsToFile(answer, "data/ProblemsCity"+numNodes+"solution.txt");
-        		
-        	}else throw new IllegalArgumentException("Invalid action for components mode");
-        	
-        }else throw new IllegalArgumentException("Invalid mode");
-        
-        duration = endTime - startTime;
-        duration/=1000;
-        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
-
+        InputGraph input = new InputGraph(edges,numNodes);
+        return input;
     }
 
     public static void printMinCostMatrix(int[][] matrix, String name) {
