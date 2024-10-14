@@ -34,4 +34,9 @@ public class UnweightedGraph extends Graph{
 	public int cost(int source, int destiny) throws Exception {
 		return 0;
 	}
+
+	@Override
+	public int cost(EdgeArray edge) throws Exception {
+		return 0;
+	}
 }

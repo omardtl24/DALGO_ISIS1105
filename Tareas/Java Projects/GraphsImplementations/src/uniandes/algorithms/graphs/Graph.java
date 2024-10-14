@@ -64,4 +64,6 @@ public abstract class Graph {
     }
     
     public abstract int cost(int source, int destiny) throws Exception;
+    
+    public abstract int cost(EdgeArray edge) throws Exception;
 }

@@ -72,4 +72,12 @@ public class WeightedDiGraph extends Graph {
         if(source==destiny) return 0;
         return value == null ? Integer.MAX_VALUE : value;
     }
+    
+    @Override
+    public int cost(EdgeArray edge) throws Exception {
+    	int[] ar = edge.getEdge();
+    	
+    	// Retrieve the cost of the edge from the costs map.
+        return cost(ar[0],ar[1]);
+    }
 }

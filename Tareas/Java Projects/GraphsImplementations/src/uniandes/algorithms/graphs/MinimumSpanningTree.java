@@ -8,5 +8,5 @@ public interface MinimumSpanningTree {
 	 * @param graph Representation of graph
 	 * @return Minimum Spanning Tree linked to the graph
 	 */
-	public List<int[]> getMST(Graph graph);
+	public List<int[]> getMST(WeightedGraph graph);
 }

@@ -62,10 +62,6 @@ public class GraphImplementations {
 	        if(print) printMinCostMatrix(answer,action);
 	        saveMatrixToFile(answer, "data/distances"+numNodes+action+"solution.txt");
 	        
-	        duration = endTime - startTime;
-	        duration/=1000;
-	        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
-	        
         }else if(mode.equals("components")) {
         	UnweightedGraph graph = new  UnweightedGraph(edges,numNodes);
         	ConnectedComponents conComp;
@@ -79,14 +75,27 @@ public class GraphImplementations {
 	        
 	        if(print) printListOfLists(answer,action);
 	        saveListsToFile(answer, "data/components"+numNodes+action+"solution.txt");
-	        
-	        duration = endTime - startTime;
-	        duration/=1000;
-	        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
         	
+        }else if(mode.equals("Problems")) {
+        	if(action.equals("CityCosts")) {
+        		
+        		WeightedGraph graph = new WeightedGraph(edges,numNodes);
+        		MinimumSpanningTree mst = new KruskalMST();
+        		
+        		startTime = System.nanoTime();
+    	        List<int []> answer = mst.getMST(graph);
+    	        endTime = System.nanoTime();
+    	        
+    	        if(print) printPairs(answer, graph);
+    	        savePairsToFile(answer, "data/ProblemsCity"+numNodes+"solution.txt");
+        		
+        	}else throw new IllegalArgumentException("Invalid action for components mode");
         	
         }else throw new IllegalArgumentException("Invalid mode");
         
+        duration = endTime - startTime;
+        duration/=1000;
+        System.out.println("Execution time in microseconds using "+action+" for "+numNodes+" nodes graph: " + duration);
 
     }
 
@@ -196,6 +205,57 @@ public class GraphImplementations {
                 }
                 writer.write(sb.toString());
                 writer.newLine(); // Write a new line after each list
+            }
+        }
+    }
+    
+    /**
+     * Prints a List of int arrays, each containing two integers.
+     *
+     * @param pairs The List of int arrays to be printed.
+     * @throws Exception 
+     */
+    public static void printPairs(List<int[]> pairs, WeightedGraph graph) throws Exception {
+        StringBuilder sb = new StringBuilder();  // StringBuilder for efficient string construction
+        sb.append("Edges from MST: {");  // Start with the opening brace
+        int cost = 0;
+
+        // Loop through each int array in the list
+        for (int i = 0; i < pairs.size(); i++) {
+            int[] pair = pairs.get(i);  // Get the current int array (pair)
+            sb.append("(");  // Add opening parenthesis for the pair
+            sb.append(pair[0]);  // Append the first element of the pair
+            sb.append(",");  // Append a comma between the elements
+            sb.append(pair[1]);  // Append the second element of the pair
+            sb.append(")");  // Close the parenthesis for the pair
+            cost += graph.cost(pair[0],pair[1]);
+            // Add a comma between pairs, except after the last pair
+            if (i < pairs.size() - 1) {
+                sb.append(",");  
+            }
+        }
+        
+
+        sb.append("} \nThe minimum cost associated is: "+cost+"\n");  // Close the outer brace
+        System.out.println(sb.toString());  // Output the final formatted string
+    }
+    
+    /**
+     * Saves a List of integer pairs to a text file, each pair on a new line.
+     * The format of each pair is "x y".
+     *
+     * @param pairs    The List of integer pairs (int arrays) to be written.
+     * @param filename The name of the output text file.
+     * @throws IOException If an I/O error occurs during file writing.
+     */
+    public static void savePairsToFile(List<int[]> pairs, String filename) throws IOException {
+        // Use BufferedWriter for efficient writing to the file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            // Loop through each pair (int array) in the list
+            for (int[] pair : pairs) {
+                // Write the pair in the format "x y"
+                writer.write(pair[0] + " " + pair[1]);
+                writer.newLine();  // Move to the next line after writing each pair
             }
         }
     }
