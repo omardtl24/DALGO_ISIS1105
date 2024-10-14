@@ -5,10 +5,12 @@ import java.util.List;
 public class InputGraph{
 	private List<int []> input;
 	private int nodes;
+	private String[] namesMapper;
 	
-	public InputGraph(List<int []> i , int n){
+	public InputGraph(List<int []> i , int n, String[] names){
 		input = i;
 		nodes = n;
+		namesMapper = names;
 	}
 	
 	public int getNodes() {
@@ -17,5 +19,9 @@ public class InputGraph{
 	
 	public List<int []> getInput() {
 		return input;
+	}
+	
+	public String[] getNames() {
+		return namesMapper;
 	}
 }

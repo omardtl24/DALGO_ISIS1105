@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class GraphImplementations {
@@ -119,8 +121,96 @@ public class GraphImplementations {
             System.err.println("Error reading file: " + e.getMessage());
             return null;
         }
-        InputGraph input = new InputGraph(edges,numNodes);
+        InputGraph input = new InputGraph(edges,numNodes,null);
         return input;
+    }
+    
+    public static InputGraph getInputBooksProblem(String inFilenameVaultCapacities, String inFilenameBusesInformation) {
+    	List<int[]> edges = new ArrayList<>();
+    	Map<String, Boolean> vaultNames = new HashMap<String,Boolean>();
+    	Map<String, Integer> InNodes = new HashMap<String, Integer>();
+    	List<String> namesMapper = new ArrayList<String>();
+    	int numNodes = 0;
+        // Read the file and parse the edges
+        try (BufferedReader in = new BufferedReader(new FileReader(inFilenameVaultCapacities))) {
+            String line;
+            while ((line = in.readLine()) != null) {
+                String[] parts = line.trim().split("\\s+");
+                if (parts.length == 2) {
+                    String vault = parts[0];
+                    int maxCapacity = Integer.parseInt(parts[1]);
+                    InNodes.put(vault, numNodes);
+                    namesMapper.add(vault);
+                    namesMapper.add(vault);
+                    vaultNames.put(vault,true);
+                    edges.add(new int[] {numNodes,numNodes+1,maxCapacity});
+                    numNodes+=2;
+                } else throw new IllegalArgumentException("Vault Capacities file does not have the required format");
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+            return null;
+        }
+        
+        
+        try (BufferedReader in = new BufferedReader(new FileReader(inFilenameBusesInformation))) {
+            String line;
+            int s,d;
+            while ((line = in.readLine()) != null) {
+                String[] parts = line.trim().split("\\s+");
+                if (parts.length == 3) {
+                    String source = parts[0];
+                    String destiny = parts[1];
+                    int busCapacity = Integer.parseInt(parts[2]);
+                    
+                    if(InNodes.containsKey(source)) {
+                    	if(vaultNames.containsKey(source)) {
+                    		s = InNodes.get(source)+1;
+                    	}else {
+                    		s = InNodes.get(source);
+                    	}
+                    }else{
+                    	namesMapper.add(source);
+                    	s = numNodes;
+                    	InNodes.put(source, s);
+                    	numNodes+=1;
+                    }
+                    
+                    if(InNodes.containsKey(destiny)) {
+                    	d = InNodes.get(destiny);
+                    }else{
+                    	namesMapper.add(destiny);
+                    	d = numNodes;
+                    	InNodes.put(destiny, d);
+                    	numNodes+=1;
+                    }
+                    
+                    edges.add(new int[] {s,d,busCapacity});
+
+                } else throw new IllegalArgumentException("Buses Information file does not have the required format");
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file: " + e.getMessage());
+            return null;
+        }
+        
+        String[] names = namesMapper.toArray(new String[0]);
+        
+        InputGraph input = new InputGraph(edges,numNodes,names);
+        return input;
+    }
+    
+    private static List<String[]> translateBooksAnswer(List<int []> flows , String[] names) {
+    	List<String []> answer = new ArrayList<>();
+    	String source, destiny, f;
+    	for(int [] flow : flows) {
+    		source = names[flow[0]];
+    		destiny = names[flow[1]];
+    		f = String.valueOf(flow[2]);
+    		answer.add(new String[] {source, destiny, f});
+    	}
+    	
+    	return answer;
     }
 
     public static void printMinCostMatrix(int[][] matrix, String name) {
