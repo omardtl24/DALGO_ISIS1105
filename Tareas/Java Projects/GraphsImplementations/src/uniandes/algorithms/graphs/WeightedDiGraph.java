@@ -51,6 +51,7 @@ public class WeightedDiGraph extends Graph {
         }
     }
     
+    // Default constructor for the WeightedDiGraph class.
     public WeightedDiGraph(){
         super(); // Call the constructor of the Graph superclass.
     }
@@ -72,55 +73,91 @@ public class WeightedDiGraph extends Graph {
         // Retrieve the cost of the edge from the costs map.
         Integer value = costs.get(edge);
 
-        // If the edge does not exist, return Integer.MAX_VALUE; otherwise, return the cost.
+        // If the source and destination are the same, the cost is zero.
         if(source==destiny) return 0;
+        
+        // Return the cost if it exists; otherwise, return Integer.MAX_VALUE to indicate no edge.
         return value == null ? Integer.MAX_VALUE : value;
     }
     
     @Override
     public int cost(EdgeArray edge) throws Exception {
-    	int[] ar = edge.getEdge();
-    	
-    	// Retrieve the cost of the edge from the costs map.
-        return cost(ar[0],ar[1]);
+        int[] ar = edge.getEdge(); // Get the edge array from the EdgeArray object.
+        
+        // Retrieve the cost of the edge from the costs map.
+        return cost(ar[0], ar[1]); // Call the cost method using the source and destination nodes.
     }
     
     @Override
     public boolean containsEdge(EdgeArray edge) {
-    	return costs.containsKey(edge);
+        // Check if the edge exists in the costs map.
+        return costs.containsKey(edge);
     }
     
+    /**
+     * Removes an edge from the graph.
+     * 
+     * @param edge The edge to be removed.
+     */
     public void removeEdge(EdgeArray edge) {
-    	if(containsEdge(edge)) {
-    		int [] edgeArray = edge.getEdge();
-    		adjacency.get(edgeArray[0]).remove(edgeArray[1]);
-    		edges.remove(edge);
-    		costs.remove(edge);
-    	}
+        if(containsEdge(edge)) { // Check if the edge exists.
+            int[] edgeArray = edge.getEdge(); // Get the edge array.
+            adjacency.get(edgeArray[0]).remove(edgeArray[1]); // Remove the destination from the adjacency list.
+            edges.remove(edge); // Remove the edge from the edges list.
+            costs.remove(edge); // Remove the edge from the costs map.
+        }
     }
     
+    /**
+     * Removes an edge between two specified nodes.
+     * 
+     * @param u The source node.
+     * @param v The destination node.
+     * @throws Exception if the edge is invalid.
+     */
     public void removeEdge(int u, int v) throws Exception {
-		EdgeArray edge = new EdgeArray(new int[] {u,v});
-		removeEdge(edge);
-	}
+        EdgeArray edge = new EdgeArray(new int[] {u, v}); // Create an EdgeArray for the specified edge.
+        removeEdge(edge); // Call the removeEdge method with the created edge.
+    }
     
+    /**
+     * Adds an edge to the graph with a specified cost.
+     * 
+     * @param edge The edge to be added.
+     * @param cost The cost associated with the edge.
+     */
     public void addEdge(EdgeArray edge, int cost) {
-    	if(!containsEdge(edge)) {
-    		int [] edgeArray = edge.getEdge();
-    		adjacency.get(edgeArray[0]).add(edgeArray[1]);
-    		edges.add(edge);
-    	}
-    	costs.put(edge, cost);
-	}
+        if(!containsEdge(edge)) { // Check if the edge does not already exist.
+            int[] edgeArray = edge.getEdge(); // Get the edge array.
+            adjacency.get(edgeArray[0]).add(edgeArray[1]); // Add the destination to the adjacency list.
+            edges.add(edge); // Add the edge to the edges list.
+        }
+        costs.put(edge, cost); // Store the cost of the edge in the costs map.
+    }
 
-	
-	public void addEdge(int u, int v, int cost) throws Exception {
-		EdgeArray edge = new EdgeArray(new int[] {u,v});
-		addEdge(edge, cost);
-	}
+    /**
+     * Adds an edge between two specified nodes with an associated cost.
+     * 
+     * @param u The source node.
+     * @param v The destination node.
+     * @param cost The cost associated with the edge.
+     * @throws Exception if the edge is invalid.
+     */
+    public void addEdge(int u, int v, int cost) throws Exception {
+        EdgeArray edge = new EdgeArray(new int[] {u, v}); // Create an EdgeArray for the specified edge.
+        addEdge(edge, cost); // Call the addEdge method with the created edge and cost.
+    }
 
-	public boolean containsEdge(int u, int v) throws Exception {
-		EdgeArray edge = new EdgeArray(new int[] {u,v});
-		return containsEdge(edge);
-	}
+    /**
+     * Checks if an edge exists between two specified nodes.
+     * 
+     * @param u The source node.
+     * @param v The destination node.
+     * @return true if the edge exists; false otherwise.
+     * @throws Exception if the edge is invalid.
+     */
+    public boolean containsEdge(int u, int v) throws Exception {
+        EdgeArray edge = new EdgeArray(new int[] {u, v}); // Create an EdgeArray for the specified edge.
+        return containsEdge(edge); // Call the containsEdge method with the created edge.
+    }
 }

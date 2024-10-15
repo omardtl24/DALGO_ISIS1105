@@ -31,16 +31,19 @@ public abstract class Graph {
         adjacency = new ArrayList<>(numNodes); // Initialize the list with capacity
         edges = new ArrayList<>();
         for (int i = 0; i < numNodes; i++) {
-        	adjacency.add(new ArrayList<Integer>()); // Initialize each inner list
+            adjacency.add(new ArrayList<Integer>()); // Initialize each inner list
         }
     }
     
-    public Graph(){
+    /**
+     * Default constructor for the Graph class. Initializes an empty graph.
+     */
+    public Graph() {
         numNodes = 0;
         adjacency = new ArrayList<>(numNodes); // Initialize the list with capacity
         edges = new ArrayList<>();
         for (int i = 0; i < numNodes; i++) {
-        	adjacency.add(new ArrayList<Integer>()); // Initialize each inner list
+            adjacency.add(new ArrayList<Integer>()); // Initialize each inner list
         }
     }
 
@@ -62,6 +65,7 @@ public abstract class Graph {
     public List<EdgeArray> edges() {
         return edges;
     }
+
     /**
      * Returns the total number of nodes in the graph.
      * 
@@ -71,9 +75,30 @@ public abstract class Graph {
         return numNodes;
     }
     
+    /**
+     * Abstract method to calculate the cost between two nodes.
+     * 
+     * @param source The starting node.
+     * @param destiny The destination node.
+     * @return The cost associated with traveling from the source to the destiny node.
+     * @throws Exception if the source or destiny node is invalid.
+     */
     public abstract int cost(int source, int destiny) throws Exception;
     
+    /**
+     * Abstract method to calculate the cost associated with a specific edge.
+     * 
+     * @param edge The edge for which the cost is to be calculated.
+     * @return The cost associated with the specified edge.
+     * @throws Exception if the edge is invalid.
+     */
     public abstract int cost(EdgeArray edge) throws Exception;
     
+    /**
+     * Abstract method to check if a specific edge exists in the graph.
+     * 
+     * @param edge The edge to check for existence.
+     * @return True if the edge exists in the graph, false otherwise.
+     */
     public abstract boolean containsEdge(EdgeArray edge);
 }
