@@ -136,7 +136,7 @@ public class GraphImplementations {
 	            
 	            // Print the maximum flow result if the print flag is set
 	            if (print) 
-	                System.out.println("Maximum flow gotten was: " + answer.getMaxFlowValue());
+	                System.out.println("The maximum amount of books that can be transported is: " + answer.getMaxFlowValue());
 	            saveListToFile(answertoSave, answer.getMaxFlowValue(), outputFile); // Save the results to the output file
 	            
 	        } else 
