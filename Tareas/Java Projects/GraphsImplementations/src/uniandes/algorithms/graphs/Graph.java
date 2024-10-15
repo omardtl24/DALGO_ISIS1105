@@ -26,8 +26,17 @@ public abstract class Graph {
      * @throws Exception if the edge list is empty or the number of nodes is zero.
      */
     public Graph(List<int[]> input, int n) throws Exception {
-        if (input.isEmpty() || n == 0) throw new Exception("An empty graph can't be created");
+        if (input.isEmpty() || n == 0) throw new Exception("Invalid set of edges");
         numNodes = n;
+        adjacency = new ArrayList<>(numNodes); // Initialize the list with capacity
+        edges = new ArrayList<>();
+        for (int i = 0; i < numNodes; i++) {
+        	adjacency.add(new ArrayList<Integer>()); // Initialize each inner list
+        }
+    }
+    
+    public Graph(){
+        numNodes = 0;
         adjacency = new ArrayList<>(numNodes); // Initialize the list with capacity
         edges = new ArrayList<>();
         for (int i = 0; i < numNodes; i++) {
@@ -53,7 +62,6 @@ public abstract class Graph {
     public List<EdgeArray> edges() {
         return edges;
     }
-
     /**
      * Returns the total number of nodes in the graph.
      * 
@@ -66,4 +74,6 @@ public abstract class Graph {
     public abstract int cost(int source, int destiny) throws Exception;
     
     public abstract int cost(EdgeArray edge) throws Exception;
+    
+    public abstract boolean containsEdge(EdgeArray edge);
 }

@@ -37,6 +37,10 @@ public class WeightedGraph extends Graph{
             edges.add(edge);
         }
 	}
+	public WeightedGraph(){
+		super();
+
+	}
 	
 	/**
      * Returns the cost of traveling from a source node to a destination node.
@@ -67,4 +71,40 @@ public class WeightedGraph extends Graph{
     	// Retrieve the cost of the edge from the costs map.
         return cost(ar[0],ar[1]);
     }
+    
+    @Override
+	public boolean containsEdge(EdgeArray edge) {
+    	return costs.containsKey(edge);
+    }
+	
+    public void addEdge(EdgeArray edge, int cost) {
+    	if(!containsEdge(edge)) {
+    		edges.add(edge);
+    		costs.put(edge, cost);
+    	}
+	}
+
+	
+	public void addEdge(int u, int v, int cost) throws Exception {
+		EdgeArray edge = new EdgeArray(new int[] {u,v});
+		addEdge(edge, cost);
+		edge = new EdgeArray(new int[] {v,u});
+		addEdge(edge, cost);
+	}
+	
+	public void removeEdge(EdgeArray edge) {
+    	if(containsEdge(edge)) {
+    		int [] edgeArray = edge.getEdge();
+    		adjacency.get(edgeArray[0]).remove(edgeArray[1]);
+    		edges.remove(edge);
+    		costs.remove(edge);
+    	}
+    }
+    
+    public void removeEdge(int u, int v) throws Exception {
+		EdgeArray edge = new EdgeArray(new int[] {u,v});
+		removeEdge(edge);
+		edge = new EdgeArray(new int[] {v,u});
+		removeEdge(edge);
+	}
 }

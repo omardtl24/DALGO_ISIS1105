@@ -29,6 +29,10 @@ public class UnweightedGraph extends Graph{
             edges.add(edge);
         }
     }
+	
+	public UnweightedGraph(){
+        super(); // Call the constructor of the Graph superclass.
+    }
 
 	@Override
 	public int cost(int source, int destiny) throws Exception {
@@ -38,5 +42,38 @@ public class UnweightedGraph extends Graph{
 	@Override
 	public int cost(EdgeArray edge) throws Exception {
 		return 0;
+	}
+	@Override
+	public boolean containsEdge(EdgeArray edge) {
+    	return edges.contains(edge);
+    }
+
+	
+	public void addEdge(EdgeArray edge) {
+		if(!containsEdge(edge)) {
+			int [] edgeArray = edge.getEdge();
+    		adjacency.get(edgeArray[0]).add(edgeArray[1]);
+			edges.add(edge);
+		}
+	}
+
+	
+	public void addEdge(int u, int v) throws Exception {
+		EdgeArray edge = new EdgeArray(new int[] {u,v});
+		addEdge(edge);
+	}
+	
+	public void removeEdge(EdgeArray edge) {
+		if(containsEdge(edge)) {
+			int [] edgeArray = edge.getEdge();
+    		adjacency.get(edgeArray[0]).remove(edgeArray[1]);
+			edges.remove(edge);
+		}
+	}
+
+	
+	public void removeEdge(int u, int v) throws Exception {
+		EdgeArray edge = new EdgeArray(new int[] {u,v});
+		removeEdge(edge);
 	}
 }

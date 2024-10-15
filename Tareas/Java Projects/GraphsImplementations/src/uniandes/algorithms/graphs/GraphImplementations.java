@@ -67,7 +67,7 @@ public class GraphImplementations {
 	        if(print) printListOfLists(answer,action);
 	        saveListsToFile(answer, outputFile);
         	
-        }else if(mode.equals("Problems")) {
+        }else if(mode.equals("problems")) {
         	if(action.equals("CityCosts")) {
         		inFilename = args[2];
             	outputFile = args[3];
@@ -85,6 +85,24 @@ public class GraphImplementations {
     	        if(print) printPairs(answer, graph);
     	        savePairsToFile(answer, outputFile);
         		
+        	}else if(action.equals("BooksDelivery")){
+        		inFilename = args[2];
+        		inFilename1 = args[3];
+            	outputFile = args[4];
+                print = "1".equals(args[5]);
+                InputGraph input =  getInputBooksProblem( inFilename, inFilename1);
+                List<int[]> edges = input.getInput();
+                String[] namesMapper = input.getNames();
+                numNodes = input.getNodes();
+                WeightedDiGraph graph = new WeightedDiGraph(edges, numNodes);
+                MaximumFlow mFlow = new EdmondsKarpMaxFlow();
+                startTime = System.nanoTime();
+                MaximumFlowAnswer answer = mFlow.getMaximumFlow(graph, 0,1);
+                List<String[]> answertoSave = translateBusesCapacityAnswer(answer.getFlows(), namesMapper);
+    	        endTime = System.nanoTime();
+    	        
+    	        if(print) System.out.println("Maximum flow gotten was: "+answer.getMaxFlowValue());
+    	        saveListToFile(answertoSave,answer.getMaxFlowValue(),outputFile);
         	}else throw new IllegalArgumentException("Invalid action for components mode");
         	
         }else throw new IllegalArgumentException("Invalid mode");
@@ -130,7 +148,10 @@ public class GraphImplementations {
     	Map<String, Boolean> vaultNames = new HashMap<String,Boolean>();
     	Map<String, Integer> InNodes = new HashMap<String, Integer>();
     	List<String> namesMapper = new ArrayList<String>();
-    	int numNodes = 0;
+    	//Nodes 0 and 1 are set for the superSource and the superSink
+    	namesMapper.add("superSource");
+    	namesMapper.add("superSink");
+    	int numNodes = 2;
         // Read the file and parse the edges
         try (BufferedReader in = new BufferedReader(new FileReader(inFilenameVaultCapacities))) {
             String line;
@@ -176,6 +197,8 @@ public class GraphImplementations {
                     	numNodes+=1;
                     }
                     
+                    if(!vaultNames.containsKey(source)) edges.add(new int[] {0,s,Integer.MAX_VALUE});
+                    
                     if(InNodes.containsKey(destiny)) {
                     	d = InNodes.get(destiny);
                     }else{
@@ -184,6 +207,8 @@ public class GraphImplementations {
                     	InNodes.put(destiny, d);
                     	numNodes+=1;
                     }
+                    
+                    if(!vaultNames.containsKey(destiny)) edges.add(new int[] {d,1,Integer.MAX_VALUE});
                     
                     edges.add(new int[] {s,d,busCapacity});
 
@@ -195,19 +220,37 @@ public class GraphImplementations {
         }
         
         String[] names = namesMapper.toArray(new String[0]);
-        
         InputGraph input = new InputGraph(edges,numNodes,names);
         return input;
     }
     
-    private static List<String[]> translateBooksAnswer(List<int []> flows , String[] names) {
+    public static void saveListToFile(List<String[]> data, int maxflow, String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            // Iterate through each String[] in the List
+        	 writer.write(Integer.toString(maxflow));
+             writer.newLine(); 
+            for (String[] line : data) {
+                // Join the elements of String[] by spaces and write them to the file
+                writer.write(String.join(" ", line));
+                writer.newLine();  // Move to the next line after writing the array
+            }
+        } catch (IOException e) {
+            e.printStackTrace();  // Handle any file I/O exceptions
+        }
+    }
+    
+    private static List<String[]> translateBusesCapacityAnswer( Map<EdgeArray , Integer> flows , String[] names) {
     	List<String []> answer = new ArrayList<>();
     	String source, destiny, f;
-    	for(int [] flow : flows) {
-    		source = names[flow[0]];
-    		destiny = names[flow[1]];
-    		f = String.valueOf(flow[2]);
-    		answer.add(new String[] {source, destiny, f});
+    	System.out.println("Nodes  names array size: "+names.length);
+    	for(EdgeArray edge : flows.keySet()) {
+    		int[] flow = edge.getEdge();
+    		if(flow[0]>1 && flow[1]>1) {
+    			source = names[flow[0]];
+        		destiny = names[flow[1]];
+        		f = String.valueOf(flows.get(edge));
+        		if(!source.equals(destiny)) answer.add(new String[] {source, destiny, f});
+    		}
     	}
     	
     	return answer;
