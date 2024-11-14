@@ -82,28 +82,28 @@ public class ProblemaP2 {
 
     public class EdmondsKarpMaxFlow {
         private Map<Pair, Integer> flows;
-        private HashMap<Integer, Integer> minCutRelatedFlows;
-        private int[] nodeFlows;
+        private HashSet<Integer> minCutNodes;
+        private HashMap<Integer, Integer> nodeFlows;
         private int maxFlow;
         private int source;
         private int sink;
 
-        public HashMap<Integer, Integer> getMinCutRelatedFlows(){
-            return minCutRelatedFlows;
+        public HashSet<Integer> getMinCutNodes(){
+            return minCutNodes;
         }
         
         public int getMaxFlow(){
             return maxFlow;
         }
 
-        public int[] getNodeFlows(){
+        public HashMap<Integer, Integer> getNodeFlows(){
             return nodeFlows;
         }
 
         public void findMaximumFlow(GrafoCelulas graph , Integer toIgnore){
 
             flows = new HashMap<Pair, Integer>();
-            minCutRelatedFlows = new HashMap<Integer, Integer>();
+            minCutNodes = new HashSet<Integer>();
             maxFlow = 0;
             source = graph.getSuperSource();
             sink = graph.getSuperSink();
@@ -112,6 +112,8 @@ public class ProblemaP2 {
 
             for (Pair edge : graph.capacidades.keySet()) {
                 flows.put(edge, 0);
+                nodeFlows.put(edge.getFirst(),0);
+                nodeFlows.put(edge.getSecond(),0);
             }
 
             int[] path = BFSPath(graph, toIgnore);
@@ -134,10 +136,10 @@ public class ProblemaP2 {
                     
                     if (graph.containsEdge(u, v)) {
                         updateFlow(u, v, getFlow(u, v) + cfp);
-                        nodeFlows[v]+=cfp;
+                        nodeFlows.put(v,nodeFlows.get(v) + cfp);
                     } else {
                         updateFlow(v, u, getFlow(v, u) - cfp);
-                        nodeFlows[v]-=cfp;
+                        nodeFlows.put(v,nodeFlows.get(v) - cfp);
                     }
                     i = u;
                 }
@@ -145,22 +147,15 @@ public class ProblemaP2 {
                 path = BFSPath(graph, toIgnore);
                 
             }
-            //int sVal = 0;
-            //System.out.println("Flows");
             for(Pair edge : flows.keySet()){
                 int u = edge.getFirst();
                 int v = edge.getSecond();
 
                 if(path[u] != -1 && path[v] == -1){
-                    if(!minCutRelatedFlows.containsKey(u)) minCutRelatedFlows.put(u,0);
-                    if(!minCutRelatedFlows.containsKey(v)) minCutRelatedFlows.put(v,0);
-                    minCutRelatedFlows.put(u,minCutRelatedFlows.get(u)+flows.get(edge));
-                    minCutRelatedFlows.put(v,minCutRelatedFlows.get(v)+flows.get(edge));
-                    //sVal += flows.get(edge);
-                    //System.out.println(edge+"-->"+flows.get(edge));
+                    minCutNodes.add(u);
+                    minCutNodes.add(v);
                 }
             }
-            //System.out.println("\nMaxFlow = "+sVal);
             
         }
 
@@ -333,9 +328,24 @@ public class ProblemaP2 {
         edmondsKarpMaxFlow.findMaximumFlow(graph,-1);
         maxFlow = edmondsKarpMaxFlow.getMaxFlow();
         
-        HashMap<Integer, Integer> candidates = edmondsKarpMaxFlow.getMinCutRelatedFlows();
+        HashSet<Integer> minCutNodeFlows = edmondsKarpMaxFlow.getMinCutRelatedFlows();
+        HashMap<Integer, Integer> NodeAssociatedFlows = edmondsKarpMaxFlow.getNodeFlows();
         Integer val = 0;
+        Integer valCut = 0;
         int minCalculadoraId = 1;
+        int minCalculadoraMinCutId = 1;
+
+        for(int celula_id : graph.getCalculadoras()){
+            if(val <= NodeAssociatedFlows.get(celula_id)){
+
+            }
+
+            if(valCut <= NodeAssociatedFlows.get(celula_id) && minCutNodeFlows.contains(celula_id)){
+                
+            }
+        }
+
+
         for(int celula_id : candidates.keySet()){
             if(graph.getCalculadoras().contains(celula_id)){
                 //System.out.println(celula_id + " --> " + candidates.get(celula_id));
@@ -346,6 +356,7 @@ public class ProblemaP2 {
                 
             } 
         }
+
         if (val == 0){
             Iterator<Integer> iterator = graph.getCalculadoras().iterator();
             if (iterator.hasNext()) {
