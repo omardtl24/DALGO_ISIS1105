@@ -10,9 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.Iterator;
 
-public class ProblemaP2 {
+public class ProblemaP2BruteForce {
 
     private int maxFlow;
     private int maxMinFlow;
@@ -82,13 +81,13 @@ public class ProblemaP2 {
 
     public class EdmondsKarpMaxFlow {
         private Map<Pair, Integer> flows;
-        private HashMap<Integer, Integer> minCutRelatedFlows;
+        private Map<Integer, Integer> minCutRelatedFlows;
         private int[] nodeFlows;
         private int maxFlow;
         private int source;
         private int sink;
 
-        public HashMap<Integer, Integer> getMinCutRelatedFlows(){
+        public Map<Integer, Integer> getMinCutRelatedFlows(){
             return minCutRelatedFlows;
         }
         
@@ -145,8 +144,7 @@ public class ProblemaP2 {
                 path = BFSPath(graph, toIgnore);
                 
             }
-            //int sVal = 0;
-            //System.out.println("Flows");
+
             for(Pair edge : flows.keySet()){
                 int u = edge.getFirst();
                 int v = edge.getSecond();
@@ -156,11 +154,8 @@ public class ProblemaP2 {
                     if(!minCutRelatedFlows.containsKey(v)) minCutRelatedFlows.put(v,0);
                     minCutRelatedFlows.put(u,minCutRelatedFlows.get(u)+flows.get(edge));
                     minCutRelatedFlows.put(v,minCutRelatedFlows.get(v)+flows.get(edge));
-                    //sVal += flows.get(edge);
-                    //System.out.println(edge+"-->"+flows.get(edge));
                 }
             }
-            //System.out.println("\nMaxFlow = "+sVal);
             
         }
 
@@ -332,39 +327,24 @@ public class ProblemaP2 {
         EdmondsKarpMaxFlow edmondsKarpMaxFlow = new EdmondsKarpMaxFlow();
         edmondsKarpMaxFlow.findMaximumFlow(graph,-1);
         maxFlow = edmondsKarpMaxFlow.getMaxFlow();
-        
-        HashMap<Integer, Integer> candidates = edmondsKarpMaxFlow.getMinCutRelatedFlows();
-        Integer val = 0;
-        int minCalculadoraId = 1;
-        for(int celula_id : candidates.keySet()){
-            if(graph.getCalculadoras().contains(celula_id)){
-                //System.out.println(celula_id + " --> " + candidates.get(celula_id));
-                if(candidates.get(celula_id) >= val){
-                    minCalculadoraId = celula_id;
-                    val = candidates.get(celula_id);
-                }
-                
-            } 
-        }
-        if (val == 0){
-            Iterator<Integer> iterator = graph.getCalculadoras().iterator();
-            if (iterator.hasNext()) {
-                minCalculadoraId = iterator.next();
-                
-            } else {
-                
-                minCalculadoraId = 0;
+        List<Integer> celulasCalculadoras = graph.getCalculadoras();
+        int minCalculadoraId = celulasCalculadoras.get(0);
+        edmondsKarpMaxFlow.findMaximumFlow(graph,minCalculadoraId);
+        maxMinFlow = edmondsKarpMaxFlow.getMaxFlow();
+        for(int celula_id : celulasCalculadoras){
+            edmondsKarpMaxFlow.findMaximumFlow(graph,celula_id);
+            if(edmondsKarpMaxFlow.getMaxFlow() <= maxMinFlow){
+                maxMinFlow = edmondsKarpMaxFlow.getMaxFlow();
+                minCalculadoraId = celula_id;
             }
-            val = 0;
+
         }
         Celula candidata = graph.mapCelula(minCalculadoraId);
-        id_celula = candidata.id;
-        edmondsKarpMaxFlow.findMaximumFlow(graph, minCalculadoraId);
-        maxMinFlow = edmondsKarpMaxFlow.getMaxFlow();
+        id_celula = candidata.id; 
     }
 
     public static void main(String[] args) {
-        ProblemaP2 problemaP2 = new ProblemaP2();
+        ProblemaP2BruteForce problemaP2 = new ProblemaP2BruteForce();
         int d , c;
         Celula[] celulas;
         try ( 
