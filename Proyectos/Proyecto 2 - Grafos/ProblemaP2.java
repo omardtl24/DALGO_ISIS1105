@@ -520,18 +520,15 @@ public class ProblemaP2 {
                     System.out.printf("%d %d %d\n", problemaP2.id_celula,
                                                            problemaP2.maxFlow, 
                                                            problemaP2.maxMinFlow);
-                }catch(Exception e){
+                }catch(Exception e){/* 
                     e.printStackTrace();
-
-            // Get and print the specific line number
-            StackTraceElement element = e.getStackTrace()[0]; // Get the first element of the stack trace
-            System.out.println("Exception thrown at: " + element.getClassName() + 
-                               "." + element.getMethodName() + 
-                               " (Line: " + element.getLineNumber() + ")");
+                    // Get and print the specific line number
+                    StackTraceElement element = e.getStackTrace()[0]; // Get the first element of the stack trace
+                    System.out.println("Exception thrown at: " + element.getClassName() + 
+                                    "." + element.getMethodName() + 
+                                    " (Line: " + element.getLineNumber() + ")");*/
                 }
-
             }
-
         } catch (IOException e) {
             System.err.println("Error al leer entrada estándar: " + e.getMessage());
         }
