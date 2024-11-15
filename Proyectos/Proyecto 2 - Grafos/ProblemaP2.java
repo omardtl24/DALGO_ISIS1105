@@ -80,135 +80,177 @@ public class ProblemaP2 {
         return s;
     }
 
-    public class EdmondsKarpMaxFlow {
-        private Map<Pair, Integer> flows;
-        private HashSet<Integer> minCutNodes;
-        private HashMap<Integer, Integer> nodeFlows;
-        private int maxFlow;
-        private int source;
-        private int sink;
+    public int[] BFSFlowPath(GrafoCelulas graph , Integer toIgnore,  Map<Pair, Integer> flows){
+        int n = graph.getNumNodes();
+        int source = graph.getSuperSource();
+        int sink = graph.getSuperSink();
+        int[] parents = new int[n]; 
+        int[] colors = new int[n];
 
-        public HashSet<Integer> getMinCutNodes(){
-            return minCutNodes;
+       
+        for (int i = 0; i < n; i++) {
+            parents[i] = -1; 
         }
+
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.add(source);
+        colors[source] = 1; 
+        parents[source] = source; 
         
-        public int getMaxFlow(){
-            return maxFlow;
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            if(u == sink) return parents;
+            
+            for (int v = 0; v < n; v++) {
+
+                if (v != toIgnore){
+                    if (colors[v] == 0 && FlowOperations.residualCapacity(u, v, graph, flows) > 0) {
+                        colors[v] = 1;
+                        parents[v] = u; 
+                        q.add(v); 
+                    }
+                }
+            }
+            colors[u] = 2;
         }
 
-        public HashMap<Integer, Integer> getNodeFlows(){
+        return parents;
+    }
+
+
+    public class FlowOperations{
+
+        public static int getFlow(int u, int v, Map<Pair, Integer> flows){
+            Pair pair = new ProblemaP2().new Pair(u, v);
+            Integer val = flows.get(pair);
+            return val == null ? 0 : val; 
+        }
+
+        public static int residualCapacity(int u, int v, GrafoCelulas graph ,  Map<Pair, Integer> flows){
+            if (graph.containsEdge(u, v)) return graph.cost(u, v) - getFlow(u, v, flows);
+            if (graph.containsEdge(v, u)) return getFlow(v, u, flows);
+            return 0; 
+        }
+
+        public static HashMap<Integer, Integer> getNodeFlows(Map<Pair, Integer> flows){
+            HashMap<Integer, Integer> nodeFlows = new HashMap<>();
+            for(Pair edge : flows.keySet()){
+                if(nodeFlows.containsKey(edge.getSecond())) nodeFlows.put(edge.getSecond(),flows.get(edge));
+                else nodeFlows.put(edge.getSecond(),nodeFlows.get(edge.getSecond())+flows.get(edge));
+            }
             return nodeFlows;
         }
 
-        public void findMaximumFlow(GrafoCelulas graph , Integer toIgnore){
-
-            flows = new HashMap<Pair, Integer>();
-            minCutNodes = new HashSet<Integer>();
-            maxFlow = 0;
-            source = graph.getSuperSource();
-            sink = graph.getSuperSink();
-
-            nodeFlows = new int[graph.getNumNodes()];
-
-            for (Pair edge : graph.capacidades.keySet()) {
-                flows.put(edge, 0);
-                nodeFlows.put(edge.getFirst(),0);
-                nodeFlows.put(edge.getSecond(),0);
-            }
-
-            int[] path = BFSPath(graph, toIgnore);
-            while (path[sink] != -1){
-                int u, v, i = sink;
-                int cfp = Integer.MAX_VALUE;
-
-                while (i != source) {
-                    u = path[i];
-                    v = i;
-                    cfp = Math.min(cfp, residualCapacity(u, v, graph));
-                    i = u;
-                }
-
-                maxFlow += cfp;
-                i = sink;
-                while (i != source) {
-                    u = path[i];
-                    v = i;
-                    
-                    if (graph.containsEdge(u, v)) {
-                        updateFlow(u, v, getFlow(u, v) + cfp);
-                        nodeFlows.put(v,nodeFlows.get(v) + cfp);
-                    } else {
-                        updateFlow(v, u, getFlow(v, u) - cfp);
-                        nodeFlows.put(v,nodeFlows.get(v) - cfp);
-                    }
-                    i = u;
-                }
-
-                path = BFSPath(graph, toIgnore);
-                
-            }
+        public static HashMap<Integer, Integer> getMinCutNodeFlows(Map<Pair, Integer> flows, int[] path){
+            HashMap<Integer, Integer> minCutNodes = new HashMap<>();
             for(Pair edge : flows.keySet()){
                 int u = edge.getFirst();
                 int v = edge.getSecond();
 
                 if(path[u] != -1 && path[v] == -1){
-                    minCutNodes.add(u);
-                    minCutNodes.add(v);
+                    if(minCutNodes.containsKey(u)) minCutNodes.put(u,flows.get(edge));
+                    else minCutNodes.put(u,minCutNodes.get(u)+flows.get(edge));
+
+                    if(minCutNodes.containsKey(u)) minCutNodes.put(u,flows.get(edge));
+                    else minCutNodes.put(u,minCutNodes.get(u)+flows.get(edge));
                 }
             }
-            
+            return minCutNodes;
+        }
+    }
+
+    public class DinicMaxFlow {
+        public Map<Pair, Integer> flows;
+        int maxFlow;
+
+        public int getMaxFlow(){
+            return maxFlow;
         }
 
-        public void updateFlow(int u, int v, int newValue){
-            Pair edge = new Pair(u,v);
-            flows.put(edge, newValue);
-        }
+        public void findMaximumFlow(GrafoCelulas graph , Integer toIgnore){
 
-        public int getFlow(int u, int v){
-            Integer val = flows.get(new Pair(u, v));
-            return val == null ? 0 : val; 
-        }
+            flows = new HashMap<Pair, Integer>();
+            maxFlow = 0;
+            int sink = graph.getSuperSink();
+            int source = graph.getSuperSource();
 
-        public int residualCapacity(int u, int v, GrafoCelulas graph){
-            if (graph.containsEdge(u, v)) return graph.cost(u, v) - getFlow(u, v);
-            if (graph.containsEdge(v, u)) return getFlow(v, u);
-            return 0; 
-        }
-
-        public int[] BFSPath(GrafoCelulas graph , Integer toIgnore){
-            int n = graph.getNumNodes();
-            
-            int[] parents = new int[n]; 
-            int[] colors = new int[n];
-
-           
-            for (int i = 0; i < n; i++) {
-                parents[i] = -1; 
+            for (Pair edge : graph.capacidades.keySet()) {
+                flows.put(edge, 0);
             }
 
+            int[] levels = BFSLevelGraph(graph, toIgnore);
+
+            while(levels[sink]>0){
+                int flow = DFSSendFlow(graph,source,levels,Integer.MAX_VALUE);
+                
+                while(flow>0){
+                    maxFlow += flow;
+                    flow = DFSSendFlow(graph,source,levels,Integer.MAX_VALUE);
+                }
+
+                levels = BFSLevelGraph(graph, toIgnore);
+            }
+        }
+
+        public void updateFlow(int u, int v, int adder){
+            Pair edge = new Pair(u,v);
+            if(flows.containsKey(edge)) flows.put(edge, flows.get(edge)+adder);
+            else flows.put(edge, adder);
+        }
+
+        public int DFSSendFlow(GrafoCelulas graph , int u, int[] levels, int flow){
+
+            if(u == graph.getSuperSink()) return flow;
+
+            int n = graph.getNumNodes();
+
+            for(int v=0; v<n; v++){
+                if(levels[v] == levels[u]+1 && graph.containsEdge(u, v)){
+                    int curr_flow = Math.min(flow,FlowOperations.residualCapacity(u,v,graph,flows));
+                    int appliable_flow = DFSSendFlow(graph,v,levels,curr_flow);
+
+                    if(appliable_flow > 0){
+                        updateFlow(u, v, appliable_flow);
+                        return appliable_flow;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        public int[] BFSLevelGraph(GrafoCelulas graph, int toIgnore){
+            int n = graph.getNumNodes();
+            int source = graph.getSuperSource();
+            int[] levels = new int[n]; 
+            int[] colors = new int[n];
+    
+           
+            for (int i = 0; i < n; i++) {
+                levels[i] = -1; 
+            }
+    
             Queue<Integer> q = new LinkedList<Integer>();
             q.add(source);
             colors[source] = 1; 
-            parents[source] = source; 
+            levels[source] = 0; 
             
             while (!q.isEmpty()) {
                 int u = q.poll();
-                if(u == sink) return parents;
                 
                 for (int v = 0; v < n; v++) {
-
+    
                     if (v != toIgnore){
-                        if (colors[v] == 0 && residualCapacity(u, v, graph) > 0) {
+                        if (colors[v] == 0 && FlowOperations.residualCapacity(u, v, graph, flows) > 0) {
                             colors[v] = 1;
-                            parents[v] = u; 
+                            levels[v] = levels[u]+1; 
                             q.add(v); 
                         }
                     }
                 }
                 colors[u] = 2;
             }
-
-            return parents;
+    
+            return levels;
         }
     }
 
@@ -324,54 +366,23 @@ public class ProblemaP2 {
 
     public void solveProblem(Celula[] celulas, int d){
         GrafoCelulas graph = new GrafoCelulas(d,celulas);
-        EdmondsKarpMaxFlow edmondsKarpMaxFlow = new EdmondsKarpMaxFlow();
-        edmondsKarpMaxFlow.findMaximumFlow(graph,-1);
-        maxFlow = edmondsKarpMaxFlow.getMaxFlow();
-        
-        HashSet<Integer> minCutNodeFlows = edmondsKarpMaxFlow.getMinCutRelatedFlows();
-        HashMap<Integer, Integer> NodeAssociatedFlows = edmondsKarpMaxFlow.getNodeFlows();
-        Integer val = 0;
-        Integer valCut = 0;
-        int minCalculadoraId = 1;
-        int minCalculadoraMinCutId = 1;
-
-        for(int celula_id : graph.getCalculadoras()){
-            if(val <= NodeAssociatedFlows.get(celula_id)){
-
-            }
-
-            if(valCut <= NodeAssociatedFlows.get(celula_id) && minCutNodeFlows.contains(celula_id)){
-                
-            }
-        }
-
-
-        for(int celula_id : candidates.keySet()){
-            if(graph.getCalculadoras().contains(celula_id)){
-                //System.out.println(celula_id + " --> " + candidates.get(celula_id));
-                if(candidates.get(celula_id) >= val){
-                    minCalculadoraId = celula_id;
-                    val = candidates.get(celula_id);
-                }
-                
+        List<Integer> calculadoras = graph.getCalculadoras();
+        DinicMaxFlow dinicMaxFlow = new DinicMaxFlow();
+        dinicMaxFlow.findMaximumFlow(graph,-1);
+        maxFlow = dinicMaxFlow.getMaxFlow();
+        int candidate = -1;
+        maxMinFlow = maxFlow;
+        int newVal;
+        for(int celula_id : calculadoras){
+            dinicMaxFlow.findMaximumFlow(graph,celula_id);
+            newVal = dinicMaxFlow.getMaxFlow();
+            if(newVal <= maxMinFlow){
+                maxMinFlow = newVal;
+                candidate = celula_id;
             } 
         }
-
-        if (val == 0){
-            Iterator<Integer> iterator = graph.getCalculadoras().iterator();
-            if (iterator.hasNext()) {
-                minCalculadoraId = iterator.next();
-                
-            } else {
-                
-                minCalculadoraId = 0;
-            }
-            val = 0;
-        }
-        Celula candidata = graph.mapCelula(minCalculadoraId);
-        id_celula = candidata.id;
-        edmondsKarpMaxFlow.findMaximumFlow(graph, minCalculadoraId);
-        maxMinFlow = edmondsKarpMaxFlow.getMaxFlow();
+        id_celula = graph.celulas.get(candidate).id;
+        
     }
 
     public static void main(String[] args) {
