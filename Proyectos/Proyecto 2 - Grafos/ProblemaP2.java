@@ -59,7 +59,7 @@ public class ProblemaP2 {
         public int x;
         public int y;
         public int type;
-        public HashSet<String> aminoAcids = new HashSet<String>();
+        public HashSet<Integer> aminoAcids = new HashSet<Integer>();
 
         public Celula(){}
     }
@@ -69,12 +69,12 @@ public class ProblemaP2 {
     }
 
     public int getMaxThoughts(Celula c1, Celula c2){
-        HashSet<String> set1 = c1.aminoAcids;
-        HashSet<String> set2 = c2.aminoAcids;
+        HashSet<Integer> set1 = c1.aminoAcids;
+        HashSet<Integer> set2 = c2.aminoAcids;
         int s = 0;
-        HashSet<String> smallerSet = set1.size() < set2.size() ? set1 : set2;
-        HashSet<String> largerSet = set1.size() >= set2.size() ? set1 : set2;
-        for (String element : smallerSet) {
+        HashSet<Integer> smallerSet = set1.size() < set2.size() ? set1 : set2;
+        HashSet<Integer> largerSet = set1.size() >= set2.size() ? set1 : set2;
+        for (Integer element : smallerSet) {
             if (largerSet.contains(element)) s+=1;
         }
         return s;
@@ -161,7 +161,12 @@ public class ProblemaP2 {
 
     public class DinicMaxFlow {
         public Map<Pair, Integer> flows;
+        public Map<Integer, HashSet<Integer>> residualGraph;
         int maxFlow;
+
+        public Map<Integer, HashSet<Integer>> getResidualGraph(){
+            return residualGraph;
+        }
 
         public int getMaxFlow(){
             return maxFlow;
@@ -170,12 +175,26 @@ public class ProblemaP2 {
         public void findMaximumFlow(GrafoCelulas graph , Integer toIgnore){
 
             flows = new HashMap<Pair, Integer>();
+            residualGraph = new HashMap<Integer , HashSet<Integer>>();
             maxFlow = 0;
             int sink = graph.getSuperSink();
             int source = graph.getSuperSource();
 
             for (Pair edge : graph.capacidades.keySet()) {
                 flows.put(edge, 0);
+                int first = edge.getFirst(), second =  edge.getSecond();
+                
+                if(first!=toIgnore && second!=toIgnore){
+
+                    if(!residualGraph.containsKey(first)){
+                        residualGraph.put(first, new HashSet<Integer>());
+                    }
+                    if(!residualGraph.containsKey(second)){
+                        residualGraph.put(second, new HashSet<Integer>());
+                    }
+
+                    residualGraph.get(first).add(second);
+                }    
             }
 
             int[] levels = BFSLevelGraph(graph, toIgnore);
@@ -202,15 +221,17 @@ public class ProblemaP2 {
 
             if(u == graph.getSuperSink()) return flow;
 
-            int n = graph.getNumNodes();
-
-            for(int v=0; v<n; v++){
+            for(Integer v : residualGraph.get(u)){
                 if(levels[v] == levels[u]+1 && graph.containsEdge(u, v)){
                     int curr_flow = Math.min(flow,FlowOperations.residualCapacity(u,v,graph,flows));
                     int appliable_flow = DFSSendFlow(graph,v,levels,curr_flow);
 
                     if(appliable_flow > 0){
                         updateFlow(u, v, appliable_flow);
+                        if(FlowOperations.residualCapacity(u,v,graph,flows)<=0) residualGraph.get(u).remove(v);
+                        else residualGraph.get(u).add(v);
+                        if(FlowOperations.residualCapacity(v,u,graph,flows)<=0) residualGraph.get(v).remove(u);
+                        else residualGraph.get(v).add(u);
                         return appliable_flow;
                     }
                 }
@@ -237,15 +258,12 @@ public class ProblemaP2 {
             while (!q.isEmpty()) {
                 int u = q.poll();
                 
-                for (int v = 0; v < n; v++) {
-    
-                    if (v != toIgnore){
+                for (Integer v : residualGraph.get(u)) {
                         if (colors[v] == 0 && FlowOperations.residualCapacity(u, v, graph, flows) > 0) {
                             colors[v] = 1;
                             levels[v] = levels[u]+1; 
-                            q.add(v); 
+                            q.add(v);
                         }
-                    }
                 }
                 colors[u] = 2;
             }
@@ -373,6 +391,7 @@ public class ProblemaP2 {
         int candidate = -1;
         maxMinFlow = maxFlow;
         int newVal;
+        
         for(int celula_id : calculadoras){
             dinicMaxFlow.findMaximumFlow(graph,celula_id);
             newVal = dinicMaxFlow.getMaxFlow();
@@ -389,19 +408,21 @@ public class ProblemaP2 {
         ProblemaP2 problemaP2 = new ProblemaP2();
         int d , c;
         Celula[] celulas;
+        HashMap<String, Integer> chainMapper;
         try ( 
 			InputStreamReader is= new InputStreamReader(System.in);
 			BufferedReader br = new BufferedReader(is);
 		){
             String line = br.readLine();
 			int casos = Integer.parseInt(line);
-
             for(int caso = 0; caso < casos; caso++) {
                 line = br.readLine();
                 String[] informacionCaso = line.split(" ");
                 c = Integer.parseInt(informacionCaso[0]);
                 d = Integer.parseInt(informacionCaso[1]);
                 celulas = new Celula[c];
+                chainMapper = new HashMap<>();
+                int i = 0;
                 for(int n = 0; n < c; n++){
                     line = br.readLine();
                     String [] informacionCelulas = line.split(" ");
@@ -411,7 +432,11 @@ public class ProblemaP2 {
                     celula.y = Integer.parseInt(informacionCelulas[2]);
                     celula.type = Integer.parseInt(informacionCelulas[3]);
                     for(int a=4; a < informacionCelulas.length ; a++){
-                        celula.aminoAcids.add(informacionCelulas[a]);
+                        if(!chainMapper.containsKey(informacionCelulas[a])){
+                            chainMapper.put(informacionCelulas[a],i);
+                            i+=1;
+                        }
+                        celula.aminoAcids.add(chainMapper.get(informacionCelulas[a]));
                     }
                     celulas[n] = celula;
                 }
