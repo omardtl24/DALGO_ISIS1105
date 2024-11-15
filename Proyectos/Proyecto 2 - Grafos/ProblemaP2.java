@@ -10,8 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
-import java.util.Iterator;
 import java.util.Set;
+
+/**
+ * @author Omar David Toledo Leguizamón -- 202424446 
+ * @author Juan David Camargo -- 202220493
+ */
 
 public class ProblemaP2 {
 
