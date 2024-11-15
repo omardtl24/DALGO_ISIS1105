@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Iterator;
+import java.util.Set;
 
 public class ProblemaP2 {
 
@@ -135,8 +136,8 @@ public class ProblemaP2 {
         public static HashMap<Integer, Integer> getNodeFlows(Map<Pair, Integer> flows){
             HashMap<Integer, Integer> nodeFlows = new HashMap<>();
             for(Pair edge : flows.keySet()){
-                if(nodeFlows.containsKey(edge.getSecond())) nodeFlows.put(edge.getSecond(),flows.get(edge));
-                else nodeFlows.put(edge.getSecond(),nodeFlows.get(edge.getSecond())+flows.get(edge));
+                int currentFlow = nodeFlows.getOrDefault(edge.getSecond(), 0);
+                nodeFlows.put(edge.getSecond(), currentFlow + flows.get(edge));
             }
             return nodeFlows;
         }
@@ -163,6 +164,10 @@ public class ProblemaP2 {
         public Map<Pair, Integer> flows;
         public Map<Integer, HashSet<Integer>> residualGraph;
         int maxFlow;
+
+        public Map<Pair, Integer> getFlows(){
+            return flows;
+        }
 
         public Map<Integer, HashSet<Integer>> getResidualGraph(){
             return residualGraph;
@@ -288,6 +293,10 @@ public class ProblemaP2 {
             return capacidades.get(new Pair(u,v));
         }
 
+        public Set<Pair> getEdges(){
+            return capacidades.keySet();
+        }
+
         public boolean containsEdge(int u, int v){
             return capacidades.containsKey(new Pair(u,v));
         }
@@ -382,24 +391,90 @@ public class ProblemaP2 {
 
     }
 
+    public int getMinimumReduction(GrafoCelulas graph, 
+                                   Map<Integer,HashSet<Integer>> residualGraph, 
+                                   HashMap<Integer,Integer> nodeFlows,
+                                   Map<Pair,Integer> flows,int u){
+        if(!nodeFlows.containsKey(u)) return 0;                           
+        int nodeFlow = nodeFlows.get(u);
+        int possiblyRecovered = 0;
+        for(int v : residualGraph.get(u)){
+            if (!graph.containsEdge(u, v)){
+                int sended = FlowOperations.residualCapacity(u,v,graph,flows);
+                int candidateToSend = 0;
+                for(int vp : residualGraph.get(v)){
+                    if (graph.containsEdge(v, vp) && vp!=u){
+                        candidateToSend += FlowOperations.residualCapacity(v, vp, graph,flows);
+                    }
+                    if(sended<=candidateToSend){
+                        candidateToSend = sended;
+                        break;
+                    }
+                }
+                possiblyRecovered += candidateToSend;
+            }
+        }
+        return nodeFlow - possiblyRecovered;
+    }
+
+    public boolean isCandidate(int maxFlow, int currMaxMinFlow, int u, HashMap<Integer, Integer> nodeFlows){
+        int currfn = maxFlow - currMaxMinFlow;
+        int f_T_u = nodeFlows.getOrDefault(u,0);
+        return currfn <= f_T_u;
+    }
+
+    public int compareIntervals(int u, int v, HashMap<Integer, Pair> intervals){
+        Pair int1 = intervals.get(u);
+        Pair int2 = intervals.get(v);
+
+        if(int1.getFirst() > int2.getSecond()) return 1;
+
+        if(int1.getFirst() > int2.getFirst()) return 1;
+
+        if(int1.getSecond() > int2.getSecond()) return 1;
+
+        if(int1.getSecond() == int2.getSecond() && int1.getFirst() == int2.getFirst()) return 0;
+
+        return -1;
+    }
+
     public void solveProblem(Celula[] celulas, int d){
         GrafoCelulas graph = new GrafoCelulas(d,celulas);
         List<Integer> calculadoras = graph.getCalculadoras();
         DinicMaxFlow dinicMaxFlow = new DinicMaxFlow();
         dinicMaxFlow.findMaximumFlow(graph,-1);
         maxFlow = dinicMaxFlow.getMaxFlow();
-        int candidate = -1;
+        Map<Pair, Integer> flows = dinicMaxFlow.getFlows();
+        int candidate = calculadoras.get(0);
         maxMinFlow = maxFlow;
-        int newVal;
+        if(maxFlow==0){
+            id_celula = graph.celulas.get(candidate).id;
+            return;
+        }
+        Map<Integer, HashSet<Integer>> residualGraph = dinicMaxFlow.getResidualGraph();
+        HashMap<Integer, Integer> nodeFlows = FlowOperations.getNodeFlows(flows);
+        HashMap<Integer, Pair> intervals = new HashMap<>();
         
         for(int celula_id : calculadoras){
-            dinicMaxFlow.findMaximumFlow(graph,celula_id);
-            newVal = dinicMaxFlow.getMaxFlow();
-            if(newVal <= maxMinFlow){
-                maxMinFlow = newVal;
-                candidate = celula_id;
-            } 
+            int v = getMinimumReduction(graph,residualGraph,nodeFlows,flows,celula_id);
+            intervals.put(celula_id,new Pair(v,nodeFlows.getOrDefault(celula_id,0)));
         }
+
+        calculadoras.sort((u,v) -> compareIntervals(u,v,intervals));
+        int celula_id;
+        for (int i = calculadoras.size() - 1; i >= 0; i--) {
+            celula_id = calculadoras.get(i);
+            if(isCandidate(maxFlow, maxMinFlow, celula_id, nodeFlows)){
+                dinicMaxFlow.findMaximumFlow(graph,celula_id);
+                if(maxMinFlow >  dinicMaxFlow.getMaxFlow()){
+                    candidate = celula_id;
+                    maxMinFlow = dinicMaxFlow.getMaxFlow();
+                }
+                
+            }
+        }
+
+
         id_celula = graph.celulas.get(candidate).id;
         
     }
