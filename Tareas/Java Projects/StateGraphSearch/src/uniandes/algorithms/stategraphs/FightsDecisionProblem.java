@@ -9,6 +9,11 @@ public class FightsDecisionProblem {
     private HashMap<String, Integer> peopleMap;
     private PriorityQueue<boolean[]> agenda;
     private int t;
+    private boolean[] finalState;
+
+    public boolean[] getFinalState(){
+        return finalState;
+    }
 
     public FightsDecisionProblem(String[] p, HashSet<Fight> f){
         this.fights = f;
@@ -38,6 +43,7 @@ public class FightsDecisionProblem {
 
             if(isSolution(currentState)){
                 if(verbose==1) System.out.println(getSolution(currentState));
+                this.finalState = currentState;
                 return true;
             }
 
@@ -54,7 +60,7 @@ public class FightsDecisionProblem {
     }
 
     public boolean isSolution(boolean[] state){
-        return countFights(state) <= t;
+        return countFights(state) <= this.t;
     }
 
     public List<boolean[]> getSuccessors(boolean[] state){

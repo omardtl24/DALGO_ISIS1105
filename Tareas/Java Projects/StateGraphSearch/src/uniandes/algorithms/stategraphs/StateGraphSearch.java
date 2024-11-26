@@ -14,7 +14,7 @@ public class StateGraphSearch {
 			InputStreamReader is= new InputStreamReader(System.in);
 			BufferedReader br = new BufferedReader(is);
 		){
-            if(mode == 3){
+            if(mode == 3  ||  mode == 2){
                 //We receive the problem input as a standard I/O
                 line = br.readLine();
                 String[] caseData = line.split(" ");
@@ -34,11 +34,19 @@ public class StateGraphSearch {
                     fights.add(fight);
                 }
                 assert totalFights == fights.size();
-
-                FightsDecisionProblem fightsDecisionProblem = new FightsDecisionProblem(people,fights);
-                boolean result = fightsDecisionProblem.solveDecisionProblem(t,verbose);
-                if(result) System.out.println("A solution with "+t+" fights or less was found");
-                else System.out.println("A solution with "+t+" fights or less was not found");
+                if(mode==3){
+                    FightsDecisionProblem fightsDecisionProblem = new FightsDecisionProblem(people,fights);
+                    boolean result = fightsDecisionProblem.solveDecisionProblem(t,verbose);
+                    if(result) System.out.println("A solution with "+t+" fights or less was found");
+                    else System.out.println("A solution with "+t+" fights or less was not found");
+                }else{
+                    FightsOptimizationProblem fightsOptimizationProblem = new FightsOptimizationProblem(people,fights);
+                    fightsOptimizationProblem.findOptimalDistribution(verbose);
+                    boolean[] optimalDistribution = fightsOptimizationProblem.getOptimal();
+                    int minFights = fightsOptimizationProblem.getMinFights();
+                    System.out.println("Minimum number of fights: "+minFights);
+                    System.out.println(fightsOptimizationProblem.getSolution(optimalDistribution));
+                }
             }
 
         }catch (IOException e) {
