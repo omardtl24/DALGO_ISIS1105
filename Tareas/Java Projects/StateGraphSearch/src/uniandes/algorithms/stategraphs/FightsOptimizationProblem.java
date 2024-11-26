@@ -4,7 +4,7 @@ import java.util.*;
 
 public class FightsOptimizationProblem {
 
-    private HashSet<Fight> fights;
+    private HashSet<Pair> fights;
     private String[] people;
     private int minFights;
     private boolean[] optimal;
@@ -17,7 +17,7 @@ public class FightsOptimizationProblem {
         return minFights;
     }
 
-    public FightsOptimizationProblem(String[] p, HashSet<Fight> f){
+    public FightsOptimizationProblem(String[] p, HashSet<Pair> f){
         this.fights = f;
         this.people = p;
     }

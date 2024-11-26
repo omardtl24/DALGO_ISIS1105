@@ -24,13 +24,13 @@ public class StateGraphSearch {
                 line = br.readLine();
                 String [] people = line.split(" ");
                 assert totalPeople == people.length;
-                HashSet<Fight> fights = new HashSet<>();
+                HashSet<Pair> fights = new HashSet<>();
 
                 for(int i=0; i<totalFights; i++){
                     line = br.readLine();
                     String[] peopleFight = line.split(" ");
                     assert peopleFight.length == 2;
-                    Fight fight = new Fight(peopleFight[0], peopleFight[1]);
+                    Pair fight = new Pair(peopleFight[0], peopleFight[1]);
                     fights.add(fight);
                 }
                 assert totalFights == fights.size();

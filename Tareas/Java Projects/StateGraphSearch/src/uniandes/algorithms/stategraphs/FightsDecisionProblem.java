@@ -4,7 +4,7 @@ import java.util.*;
 
 public class FightsDecisionProblem {
 
-    private HashSet<Fight> fights;
+    private HashSet<Pair> fights;
     private String[] people;
     private HashMap<String, Integer> peopleMap;
     private PriorityQueue<boolean[]> agenda;
@@ -15,7 +15,7 @@ public class FightsDecisionProblem {
         return finalState;
     }
 
-    public FightsDecisionProblem(String[] p, HashSet<Fight> f){
+    public FightsDecisionProblem(String[] p, HashSet<Pair> f){
         this.fights = f;
         this.peopleMap = new HashMap<String, Integer>();
 
@@ -80,9 +80,9 @@ public class FightsDecisionProblem {
 
     public int countFights(boolean[] state){
         int c = 0;
-        for(Fight fight: this.fights){
-            int i = this.peopleMap.get(fight.person1);
-            int j = this.peopleMap.get(fight.person2);
+        for(Pair fight: this.fights){
+            int i = this.peopleMap.get(fight.element1);
+            int j = this.peopleMap.get(fight.element2);
 
             if(state[i]==state[j]) c+=1;
         }
