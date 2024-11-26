@@ -50,6 +50,7 @@ public class FightsOptimizationProblem {
         if (fightsDecisionProblem.solveDecisionProblem(tMin, 0)) {
             this.minFights = tMin;
         } else {
+            fightsDecisionProblem.solveDecisionProblem(tMax, 0);
             this.minFights = tMax;
         }
     
