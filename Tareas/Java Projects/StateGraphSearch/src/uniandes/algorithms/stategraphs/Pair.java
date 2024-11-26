@@ -24,4 +24,9 @@ public class Pair {
     public int hashCode() {
         return Objects.hash(element1, element2) + Objects.hash(element2, element1);
     }
+
+    @Override
+    public String toString(){
+        return "("+element1+", "+element2+")";
+    }
 }

@@ -15,7 +15,6 @@ public class StateGraphSearch {
 			BufferedReader br = new BufferedReader(is);
 		){
             if(mode == 3  ||  mode == 2){
-                //We receive the problem input as a standard I/O
                 line = br.readLine();
                 String[] caseData = line.split(" ");
                 int totalPeople = Integer.parseInt(caseData[0]);
@@ -47,6 +46,30 @@ public class StateGraphSearch {
                     System.out.println("Minimum number of fights: "+minFights);
                     System.out.println(fightsOptimizationProblem.getSolution(optimalDistribution));
                 }
+            }
+            if(mode == 1){
+                line = br.readLine();
+                String[] caseData = line.split(" ");
+                int totalIntersections = Integer.parseInt(caseData[0]);
+                int totalStreets = Integer.parseInt(caseData[1]);
+                int t = Integer.parseInt(caseData[2]);
+                line = br.readLine();
+                String [] intersections = line.split(" ");
+                assert totalIntersections == intersections.length;
+                HashSet<Pair> streets = new HashSet<>();
+
+                for(int i=0; i<totalStreets; i++){
+                    line = br.readLine();
+                    String[] streetData = line.split(" ");
+                    assert streetData.length == 2;
+                    Pair street = new Pair(streetData[0], streetData[1]);
+                    streets.add(street);
+                }
+                assert totalStreets == streets.size();
+                IntersectionsDecisionProblem intersectionsDecisionProblem = new IntersectionsDecisionProblem(intersections,streets);
+                boolean result = intersectionsDecisionProblem.solveDecisionProblem(t,verbose);
+                if(result) System.out.println("A solution with "+t+" cameras or less was found");
+                else System.out.println("A solution with "+t+" cameras or less was not found");
             }
 
         }catch (IOException e) {
