@@ -8,6 +8,7 @@ import java.util.HashSet;
 public class StateGraphSearch {
     public static void main(String[] args){
         int mode = Integer.valueOf(args[0]);
+        int verbose = Integer.valueOf(args[1]);
         String line;
         try ( 
 			InputStreamReader is= new InputStreamReader(System.in);
@@ -19,6 +20,7 @@ public class StateGraphSearch {
                 String[] caseData = line.split(" ");
                 int totalPeople = Integer.parseInt(caseData[0]);
                 int totalFights = Integer.parseInt(caseData[1]);
+                int t = Integer.parseInt(caseData[2]);
                 line = br.readLine();
                 String [] people = line.split(" ");
                 assert totalPeople == people.length;
@@ -32,9 +34,11 @@ public class StateGraphSearch {
                     fights.add(fight);
                 }
                 assert totalFights == fights.size();
-                System.out.println("Total fights: "+totalFights);
-                System.out.println("Number of people: "+ totalPeople);
-                
+
+                FightsDecisionProblem fightsDecisionProblem = new FightsDecisionProblem(people,fights);
+                boolean result = fightsDecisionProblem.solveDecisionProblem(t,verbose);
+                if(result) System.out.println("A solution with "+t+" fights or less was found");
+                else System.out.println("A solution with "+t+" fights or less was not found");
             }
 
         }catch (IOException e) {

@@ -3,8 +3,8 @@ package uniandes.algorithms.stategraphs;
 import java.util.Objects;
 
 public class Fight {
-    private final String person1;
-    private final String person2;
+    public final String person1;
+    public final String person2;
 
     public Fight(String p1, String p2) {
         person1 = p1;
