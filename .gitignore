@@ -16,3 +16,6 @@
 **/.gitignore
 
 **/.ipynb_checkpoints/
+
+**/PLargeTest.in
+**/PLargeTest.out
