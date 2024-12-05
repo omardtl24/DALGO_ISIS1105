@@ -6,7 +6,7 @@ import java.util.*;
 public class ProblemaP3{
 
     public Integer[] partition;
-    public LinkedList<LinkedList<Celula>> sets;
+    public List<Set<Celula>> sets;
     public int[] degrees;
 
     public class Celula {
@@ -35,12 +35,12 @@ public class ProblemaP3{
         int n = celulas.length;
         this.degrees = new int[n];
         this.partition = new Integer[n];
-        this.sets = new LinkedList<LinkedList<Celula>>();
+        this.sets = new ArrayList<>();;
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
                 if (areConnected(celulas[i], celulas[j],d)){
-                    this.degrees[celulas[i].id-1]++;
-                    this.degrees[celulas[j].id-1]++;
+                    this.degrees[i]++;
+                    this.degrees[j]++;
                 }
             }
         }
@@ -51,15 +51,17 @@ public class ProblemaP3{
         return false;
     }
 
-    public Integer findClique(Celula celula,int d){
-        int i = 0;
-        for(List<Celula> set : this.sets){
+    public Integer findClique(Celula celula, int d) {
+        for (int i = 0; i < this.sets.size(); i++) {
+            Set<Celula> set = this.sets.get(i);
             boolean fullyConnected = true;
-            for(Celula cell: set){
-                fullyConnected = fullyConnected && areConnected(cell, celula, d);
+            for (Celula cell : set) {
+                if (!areConnected(cell, celula, d)) {
+                    fullyConnected = false;
+                    break;
+                }
             }
-            if(fullyConnected) return i;
-            i+=1;
+            if (fullyConnected) return i;
         }
         return null;
     }
@@ -87,7 +89,7 @@ public class ProblemaP3{
             Integer clique = findClique(curCelula,d);
             if(clique==null){
                 //If it does not fits any clique, create a clique for the element
-                LinkedList<Celula> newClique = new LinkedList<Celula>();
+                Set<Celula> newClique = new HashSet<>();
                 newClique.add(curCelula);
                 clique = this.sets.size();
                 this.sets.add(newClique);
