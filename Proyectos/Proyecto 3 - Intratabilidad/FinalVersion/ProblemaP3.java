@@ -3,11 +3,35 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+/**
+ * @author Omar David Toledo Leguizamón -- 202424446 
+ * @author Juan David Camargo -- 202220493
+ */
+
 public class ProblemaP3{
 
     public Integer[] partition;
-    public List<Set<Celula>> sets;
+    public List<Group> sets;
     public int[] degrees;
+
+    public class Group{
+        public int maxSize;
+        public Set<Celula> celulas;
+
+        public Group(Celula inicial){
+            celulas = new HashSet<Celula>();
+            celulas.add(inicial);
+            maxSize = degrees[inicial.id-1]+1;
+        }
+
+        public boolean isFull(){
+            return celulas.size() == maxSize;
+        }
+
+        public void addCell(Celula celula){
+            celulas.add(celula);
+        }
+    }
 
     public class Celula {
         public int id;
@@ -61,14 +85,33 @@ public class ProblemaP3{
         }
     }
 
+    /**Gets euclidian distance between a pair of cells
+     * 
+     * @param c1 Cell 1 to get distance to cell 2
+     * @param c2 Cell 2 to get distance to cell 1
+     * @return Euclidian distance between cell 1 and cell 2
+     */
     public double getDistance(Celula c1, Celula c2){
         return Math.sqrt(Math.pow(c1.y - c2.y,2)+Math.pow(c1.x - c2.x,2));
     }
 
+    /**Checks if a pair of cells have aminoacids in common
+     * 
+     * @param c1 Cell 1 to check if it has aminoacids in common with cell 2
+     * @param c2 Cell 2 to check if it has aminoacids in common with cell 1
+     * @return True or False (Does the cells have aminoacids in common?)
+     */
     public boolean canConnect(Celula c1, Celula c2) {
         return c1.hasCommonAminoAcids(c2);
     }    
 
+    /** Inits the information necessary for the graph and stores it in the class attributes.
+     * It gets the cell number of connections its involved (Or degree) and inits the partition
+     * structures
+     * 
+     * @param celulas Cells that are going to be grouped by the criteria stablished
+     * @param d Maximum distance from which a pair of cells can send data between them
+     */
     public void initGraph(Celula[] celulas, int d) {
         int n = celulas.length;
         this.degrees = new int[n];
@@ -83,7 +126,14 @@ public class ProblemaP3{
             }
         }
     }
-
+    /**Checks if a pair of cells can send messages between them. This is criteria is resolved as
+     * their distance is on the range defined by d and if the pair has common aminoacids
+     * 
+     * @param c1 Cell 1 we want to check if it can send messages to cell 2
+     * @param c2 Cell 2 we want to check if it can send messages to cell 1
+     * @param d Maximum distance from which a pair of cells can send data between them
+     * @return True or false (Does the cells can send messages between them?)
+     */
     public boolean areConnected(Celula c1, Celula c2, int d){
         if (!(Math.abs(c1.x - c2.x) > d || Math.abs(c1.y - c2.y) > d)){
             if(getDistance(c1, c2)<=d) return canConnect(c1, c2);
@@ -91,12 +141,21 @@ public class ProblemaP3{
         return false;
     }
 
+    /**Finds a subgroup where a cell can join. This process relies in verify if the cell is 
+     * connected to all the cells in a group. If this is possible, the group id is returned, otherwise,
+     * the result is null (Which means it is c¿going to be created a new group)
+     * 
+     * @param celula Represents the cell that we want to find its subptye group
+     * @param d Maximum distance from which a pair of cells can send data between them
+     * @return Id of the group that the cell can be part of, or null if any group is feasible for it
+     */
     public Integer findClique(Celula celula, int d) {
         for (int i = 0; i < this.sets.size(); i++) {
-            Set<Celula> set = this.sets.get(i);
-            if(set.size() <= this.degrees[celula.id-1]){
+            Group set = this.sets.get(i);
+            if(!set.isFull()){
                 boolean fullyConnected = true;
-                for (Celula cell : set) {
+                Set<Celula> cells = set.celulas;
+                for (Celula cell : cells) {
                     if (!areConnected(cell, celula, d)) {
                         fullyConnected = false;
                         break;
@@ -107,7 +166,10 @@ public class ProblemaP3{
         }
         return null;
     }
-
+    /**
+     * Prints the partition gotten as problem solution. This structure is sequential as the problem
+     * output design requires this format
+     */
     public void printAnswer(){
         int n = this.partition.length;
         for(int i=0;i<n;i++){
@@ -131,19 +193,22 @@ public class ProblemaP3{
             Integer clique = findClique(curCelula,d);
             if(clique==null){
                 //If it does not fits any clique, create a clique for the element
-                Set<Celula> newClique = new HashSet<>();
-                newClique.add(curCelula);
+                Group newClique = new Group(curCelula);
                 clique = this.sets.size();
                 this.sets.add(newClique);
             }else{
                 //If it fits any clique, add element to corresponding clique
-                this.sets.get(clique).add(curCelula);
+                this.sets.get(clique).addCell(curCelula);
                 
             }
             this.partition[curCelula.id-1] = clique;
         }
     }
-
+    /**Prints the trace of an exception gotten during execution. This method will not be included
+     * in the final versoon callables as it is only for debuigging
+     * 
+     * @param e Exception trown by program
+     */
     public void printException(Exception e){
         e.printStackTrace();
         StackTraceElement element = e.getStackTrace()[0];
@@ -151,7 +216,11 @@ public class ProblemaP3{
                             "." + element.getMethodName() + 
                             " (Line: " + element.getLineNumber() + ")");
     }
-
+    /** Main problem executable code. It receives inputs and generates outputs using the format
+     * given in the problem document
+     * 
+     * @param args No args expected
+     */
     public static void main(String[] args) {
         ProblemaP3 problemaP3 = new ProblemaP3();
         int d , c;
