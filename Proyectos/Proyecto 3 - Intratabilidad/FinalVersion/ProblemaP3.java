@@ -261,11 +261,11 @@ public class ProblemaP3{
                     problemaP3.printAnswer();
                     
                 }catch(Exception e){
-                    problemaP3.printException(e);
+                    //problemaP3.printException(e);
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error al leer entrada estándar: " + e.getMessage());
+            //System.err.println("Error al leer entrada estándar: " + e.getMessage());
         }
         
     }
