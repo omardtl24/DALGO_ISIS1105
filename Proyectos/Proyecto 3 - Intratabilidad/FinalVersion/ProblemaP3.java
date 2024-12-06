@@ -4,53 +4,71 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class ProblemaP3{
-    //Problem attributes
+
     public Integer[] partition;
     public List<Set<Celula>> sets;
     public int[] degrees;
 
-    //Auxiliary class for cell representation
     public class Celula {
         public int id;
         public int x;
         public int y;
-        public BitSet aminoAcids = new BitSet(100);
+        public BitArray aminoAcids = new BitArray();
         public Celula(){}
 
         public void addAminoAcid(int aminoAcidIndex) {
             if (aminoAcidIndex < 100) {
-                aminoAcids.set(aminoAcidIndex);
+                aminoAcids.setBit(aminoAcidIndex);
             }
+        }
+
+        public boolean hasCommonAminoAcids(Celula other) {
+            return this.aminoAcids.hasCommonBit(other.aminoAcids);
         }
     }
 
-    /**Gets euclidian distance between a pair of cells
-     * 
-     * @param c1 Cell 1 to get distance to cell 2
-     * @param c2 Cell 2 to get distance to cell 1
-     * @return Euclidian distance between cell 1 and cell 2
-     */
+    public class BitArray {
+        private long part1; // Representa los bits 0-63
+        private long part2; // Representa los bits 64-99
+    
+        // Constructor: inicializa todos los bits en 0
+        public BitArray() {
+            this.part1 = 0L;
+            this.part2 = 0L;
+        }
+    
+        /**
+         * Activa un bit en el índice dado.
+         * @param index Índice del bit a activar (0-99).
+         * @throws IllegalArgumentException Si el índice no está en el rango válido.
+         */
+        public void setBit(int index) {
+
+            if (index < 64) {
+                part1 |= (1L << index); // Activa el bit en part1 (bits 0-63)
+            } else {
+                part2 |= (1L << (index - 64)); // Activa el bit en part2 (bits 64-99)
+            }
+        }
+    
+        /**
+         * Compara este BitArray con otro para verificar si tienen al menos un bit en común.
+         * @param other Otro BitArray para comparar.
+         * @return true si tienen al menos un bit en común, false en caso contrario.
+         */
+        public boolean hasCommonBit(BitArray other) {
+            return (this.part1 & other.part1) != 0 || (this.part2 & other.part2) != 0;
+        }
+    }
+
     public double getDistance(Celula c1, Celula c2){
         return Math.sqrt(Math.pow(c1.y - c2.y,2)+Math.pow(c1.x - c2.x,2));
     }
 
-    /**Checks if a pair of cells have aminoacids in common
-     * 
-     * @param c1 Cell 1 to check if it has aminoacids in common with cell 2
-     * @param c2 Cell 2 to check if it has aminoacids in common with cell 1
-     * @return True or False (Does the cells have aminoacids in common?)
-     */
     public boolean canConnect(Celula c1, Celula c2) {
-        return c1.aminoAcids.intersects(c2.aminoAcids);
-    }
+        return c1.hasCommonAminoAcids(c2);
+    }    
 
-    /** Inits the information necessary for the graph and stores it in the class attributes.
-     * It gets the cell number of connections its involved (Or degree) and inits the partition
-     * structures
-     * 
-     * @param celulas Cells that are going to be grouped by the criteria stablished
-     * @param d Maximum distance from which a pair of cells can send data between them
-     */
     public void initGraph(Celula[] celulas, int d) {
         int n = celulas.length;
         this.degrees = new int[n];
@@ -66,27 +84,13 @@ public class ProblemaP3{
         }
     }
 
-    /**Checks if a pair of cells can send messages between them. This is criteria is resolved as
-     * their distance is on the range defined by d and if the pair has common aminoacids
-     * 
-     * @param c1 Cell 1 we want to check if it can send messages to cell 2
-     * @param c2 Cell 2 we want to check if it can send messages to cell 1
-     * @param d Maximum distance from which a pair of cells can send data between them
-     * @return True or false (Does the cells can send messages between them?)
-     */
     public boolean areConnected(Celula c1, Celula c2, int d){
-        if(getDistance(c1, c2)<=d) return canConnect(c1, c2);
+        if (!(Math.abs(c1.x - c2.x) > d || Math.abs(c1.y - c2.y) > d)){
+            if(getDistance(c1, c2)<=d) return canConnect(c1, c2);
+        }
         return false;
     }
 
-    /**Finds a subgroup where a cell can join. This process relies in verify if the cell is 
-     * connected to all the cells in a group. If this is possible, the group id is returned, otherwise,
-     * the result is null (Which means it is c¿going to be created a new group)
-     * 
-     * @param celula Represents the cell that we want to find its subptye group
-     * @param d Maximum distance from which a pair of cells can send data between them
-     * @return Id of the group that the cell can be part of, or null if any group is feasible for it
-     */
     public Integer findClique(Celula celula, int d) {
         for (int i = 0; i < this.sets.size(); i++) {
             Set<Celula> set = this.sets.get(i);
@@ -103,17 +107,13 @@ public class ProblemaP3{
         }
         return null;
     }
-    /**
-     * Prints the partition gotten as problem solution. This structure is sequential as the problem
-     * output design requires this format
-     */
+
     public void printAnswer(){
         int n = this.partition.length;
         for(int i=0;i<n;i++){
             System.out.printf("%d %d\n", i+1, this.partition[i]+1);
         }
     }
-
     /** Finds an approximation to the minimum groups of cells of same subtype
      * 
      * @param celulas Array with the cells that are involving the graph design
@@ -144,11 +144,6 @@ public class ProblemaP3{
         }
     }
 
-    /**Prints the trace of an exception gotten during execution. This method will not be included
-     * in the final versoon callables as it is only for debuigging
-     * 
-     * @param e Exception trown by program
-     */
     public void printException(Exception e){
         e.printStackTrace();
         StackTraceElement element = e.getStackTrace()[0];
@@ -157,11 +152,6 @@ public class ProblemaP3{
                             " (Line: " + element.getLineNumber() + ")");
     }
 
-    /** Main problem executable code. It receives inputs and generates outputs using the format
-     * given in the problem document
-     * 
-     * @param args No args expected
-     */
     public static void main(String[] args) {
         ProblemaP3 problemaP3 = new ProblemaP3();
         int d , c;
@@ -200,6 +190,7 @@ public class ProblemaP3{
                 try{
                     problemaP3.solveProblem(celulas,d);
                     problemaP3.printAnswer();
+                    
                 }catch(Exception e){
                     problemaP3.printException(e);
                 }
